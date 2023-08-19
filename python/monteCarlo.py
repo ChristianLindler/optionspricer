@@ -1,32 +1,30 @@
 import math
 import numpy as np
 
-# Returns an expected path of a stock
-# sigma: volatility
-# mu: drift coefficient (expected return)
-# T: time until expiry (years)
-# n: number of steps
-def generateRandomWalk(initialPrice, mu, sigma, T, n):
-    dt = T/n
-    currentPrice = initialPrice
-    prices = [currentPrice]
-    while dt < T:
-        brownianMotion = np.random.normal(0, math.sqrt(dt))
-        changeInPrice = mu * dt + sigma * brownianMotion
-        currentPrice += changeInPrice
-        prices.append(currentPrice)
-        T -= dt
-    return prices
 
 # Generates many sample paths of a stock
+# timePoints holds the array of sample times
+# S0: initial price
 # mu: drift
 # sigma: volatility
 # T: time until expiry (years)
-def generatePaths(numSimulations, initialPrice, mu, sigma, numSteps, T):
+def generatePaths(numSims, S0, mu, sigma, numSteps, T, r):
+    dt = float(T)/numSteps
+    timePoints = np.arange(0, T+dt, dt)
     paths = []
-    for i in range(numSimulations):
-        paths.append(generateRandomWalk(initialPrice, mu, sigma, numSteps, T))
-    return paths
+    for i in range(numSims):
+        path = [S0]
+        currentPrice = S0
+        for t in timePoints[1:]:
+            brownianMotion =  np.random.normal(0, math.sqrt(dt))  # Wiener process increment
+            #changeInPrice = np.exp(mu * dt + sigma * brownianMotion)
+            changeInPrice = mu * S0 * dt + sigma * currentPrice * brownianMotion
+            newPrice = currentPrice + changeInPrice
+            #sigma = vol_dynamic_func(currentPrice, newPrice, sigma)
+            currentPrice = newPrice
+            path.append(currentPrice)
+        paths.append(path)
+    return timePoints, paths
 
 # callOrPut: whether option is call or put (string)
 # paths: [numPaths][numSteps]
@@ -34,9 +32,10 @@ def generatePaths(numSimulations, initialPrice, mu, sigma, numSteps, T):
 # r: risk free interest rate
 # T: time until expiry (years)
 def monteCarloPrice(callOrPut, paths, K, r, T):
+    paths = np.array(paths)
     if callOrPut == 'call':
-        payoffs = max(0, paths[-1] - K)
+        payoffs = np.maximum(0, paths[:,-1] - K)
     elif callOrPut == 'put':
-        payoffs = max(0, K - paths[-1])
+        payoffs = np.maximum(0, K - paths[:,-1])
     # Discount payoffs to present value using risk free interest rate
     return np.mean(payoffs)*np.exp(-r*T)
