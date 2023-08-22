@@ -3,31 +3,35 @@ import monteCarlo
 import matplotlib.pyplot as plt
 import yfinance as yf
 
-NUM_SIMS = 10000
-NUM_STEPS = 252
+NUM_SIMS = 100000
+NUM_STEPS = 1000
 
-#def vol_dynamics()
+def vol_dynamics(previousPrices, currentPrices, previousVol, vcr=-11):
+    return
+
 
 # Calculates the price of an option
 # ticker: Stock ticker
 # K: Strike Price
 # T: Time to expiry
 # r: risk free interest rate
-def priceOption(callOrPut, ticker, K, T, r):
+def priceOption(callOrPut, ticker, K, T, r, vol_reversion):
     stockData = yf.Ticker(ticker)
     initialPrice = stockData.history(period="1d")["Close"].iloc[0]
     print('initial price', initialPrice)
     # TEMP VALUES:
-    drift = 0
+    drift = r
     volatility = 0.2
 
-    timePoints, paths = monteCarlo.generatePaths(NUM_SIMS, initialPrice, drift, volatility, NUM_STEPS, T, r)
+    timePoints, paths = monteCarlo.generatePaths(NUM_SIMS, initialPrice, drift, volatility, NUM_STEPS, T, vol_reversion, 0)
     mcprice = monteCarlo.monteCarloPrice(callOrPut, paths, K, r, T)
     bcprice = blackScholes.blackScholesCall(initialPrice, K, T, volatility, r)
-    for path in paths:
-        plt.plot(timePoints, path)
     print('MC:', mcprice)
     print('BS:', bcprice)
-    plt.show()
 
-priceOption('call', 'GOOG', 125, 1, 0.03)
+    #for path in paths:
+        #plt.plot(timePoints, path)
+    #plt.show()
+    
+
+priceOption('call', 'GOOG', 125, 3, 0.03, 1)
