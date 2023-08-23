@@ -7,18 +7,18 @@ import numpy as np
 NUM_SIMS = 100
 NUM_STEPS = 1000
 
-def vol_dynamics(previousPrices, currentPrices, previousVol, vcr=-11):
+def vol_dynamics(previous_prices, current_prices, previous_vol, vcr=-11):
     return
 
 # Calculates historical volatility for a stock
 # ticker: Stock ticker
 # numDays: number of days incorporate for the calculation
-def getHistoricalVolatility(ticker, numDays):
-    stockData = yf.download(ticker)
-    stockData = stockData.sort_values(by='Date', ascending=False).head(numDays)
-    stockData['Daily_Returns'] = stockData['Adj Close'].pct_change()
+def get_historical_volatility(ticker, num_days):
+    stock_data = yf.download(ticker)
+    stock_data = stock_data.sort_values(by='Date', ascending=False).head(num_days)
+    stock_data['Daily_Returns'] = stock_data['Adj Close'].pct_change()
     # Calculate annualized historical volatility
-    return np.std(stockData['Daily_Returns']) * np.sqrt(252)
+    return np.std(stock_data['Daily_Returns']) * np.sqrt(252)
 
 
 # Calculates the price of an option
@@ -27,27 +27,27 @@ def getHistoricalVolatility(ticker, numDays):
 # T: Time to expiry
 # r: risk free interest rate
 # kappa: volatility mean reversion rate
-def priceOption(callOrPut, ticker, K, T, r, kappa):
-    stockData = yf.Ticker(ticker)
-    initialPrice = stockData.history(period="1d")["Close"].iloc[0]
-    print('initial price', initialPrice)
+def price_option(call_or_put, ticker, K, T, r, kappa):
+    stock_data = yf.Ticker(ticker)
+    initial_price = stock_data.history(period="1d")["Close"].iloc[0]
+    print('initial price', initial_price)
     
     # TEMP VALUES
-    volatility = getHistoricalVolatility(ticker)
+    volatility = get_historical_volatility(ticker)
     theta = volatility ** 2
-    volOfVol = 0.3
+    vol_of_vol = 0.3
 
     # Drift set to risk free interest rate (risk neutral pricing)
-    timePoints, paths = monteCarlo.generatePaths(NUM_SIMS, initialPrice, r, volatility, NUM_STEPS, T, kappa, volOfVol, theta)
-    mcprice = monteCarlo.monteCarloPrice(callOrPut, paths, K, r, T)
-    bcprice = blackScholes.blackScholes(callOrPut, initialPrice, K, T, volatility, r)
-    print('MC:', mcprice)
-    print('BS:', bcprice)
+    time_points, paths = monteCarlo.generate_paths(NUM_SIMS, initial_price, r, volatility, NUM_STEPS, T, kappa, vol_of_vol, theta)
+    mc_price = monteCarlo.monte_carlo_price(call_or_put, paths, K, r, T)
+    bc_price = blackScholes.black_scholes(call_or_put, initial_price, K, T, volatility, r)
+    print('MC:', mc_price)
+    print('BS:', bc_price)
 
     for path in paths:
-        plt.plot(timePoints, path)
+        plt.plot(time_points, path)
     plt.show()
     
 
 #priceOption('call', 'GOOG', 125, 3, 0.03, 3)
-print(getHistoricalVolatility('GOOG', 30))
+print(get_historical_volatility('GOOG', 30))

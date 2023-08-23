@@ -8,7 +8,7 @@ from scipy.stats import norm
 # T: Time to expiry
 # sigma: volatility
 # r: risk free interest rate
-def blackScholes(callOrPut, S, K, T, sigma, r):
+def black_scholes(callOrPut, S, K, T, sigma, r):
     d1 = (math.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * math.sqrt(T))
     d2 = d1 - sigma * math.sqrt(T)
     if callOrPut == 'call':
