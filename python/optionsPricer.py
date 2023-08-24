@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import yfinance as yf
 import numpy as np
 
-NUM_SIMS = 100
+NUM_SIMS = 10
 NUM_STEPS = 1000
 
 def vol_dynamics(previous_prices, current_prices, previous_vol, vcr=-11):
@@ -33,12 +33,13 @@ def price_option(call_or_put, ticker, K, T, r, kappa):
     print('initial price', initial_price)
     
     # TEMP VALUES
-    volatility = get_historical_volatility(ticker)
-    theta = volatility ** 2
+    volatility = get_historical_volatility(ticker, 30)
+    theta = volatility
     vol_of_vol = 0.3
+    rho = -0.7
 
     # Drift set to risk free interest rate (risk neutral pricing)
-    time_points, paths = monteCarlo.generate_paths(NUM_SIMS, initial_price, r, volatility, NUM_STEPS, T, kappa, vol_of_vol, theta)
+    time_points, paths = monteCarlo.generate_paths(NUM_SIMS, initial_price, r, volatility, NUM_STEPS, T, kappa, vol_of_vol, theta, rho)
     mc_price = monteCarlo.monte_carlo_price(call_or_put, paths, K, r, T)
     bc_price = blackScholes.black_scholes(call_or_put, initial_price, K, T, volatility, r)
     print('MC:', mc_price)
@@ -49,5 +50,5 @@ def price_option(call_or_put, ticker, K, T, r, kappa):
     plt.show()
     
 
-#priceOption('call', 'GOOG', 125, 3, 0.03, 3)
-print(get_historical_volatility('GOOG', 30))
+price_option('call', 'GOOG', 125, 3, 0.03, 3)
+#print(get_historical_volatility('GOOG', 30))

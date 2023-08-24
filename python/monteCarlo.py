@@ -1,12 +1,14 @@
-import math
 import numpy as np
 import tqdm
+import matplotlib.pyplot as plt
+from brownianMotion import *
 
-# Returns array of Wiener process increments
-def get_brownian_motion(dt, size):
-    return np.random.normal(0, math.sqrt(dt), size)
 
 # Generates sample paths for a stock
+# Follows the Heston Model:
+# dS(t) = mu*S*dt + sigma*S*dW(t) 
+# dV(t) = k(theta - V)dt + vol_of_vol*V*dW(t) 
+# The two brownian motions are correlated with rho
 # time_points holds the array of sample times
 # S0: initial price
 # mu: drift
@@ -15,15 +17,15 @@ def get_brownian_motion(dt, size):
 # kappa: mean reversion rate
 # vol_of_vol: volatility of volatility
 # theta: long term mean of variance
-def generate_paths(num_sims, S0, mu, sigma, num_steps, T, kappa, vol_of_vol, theta):
+# rho: correlation for brownian motions
+def generate_paths(num_sims, S0, mu, sigma, num_steps, T, kappa, vol_of_vol, theta, rho):
     time_points = np.linspace(0, T, num_steps)
     dt = time_points[1]
     
     paths = np.full((num_sims, num_steps), S0)
-    asset_brownian_motion = get_brownian_motion(dt, (num_sims, num_steps - 1))
-    vol_brownian_motion = get_brownian_motion(dt, (num_sims, num_steps - 1))
     theta = np.full(num_sims, theta)
-    theta = current_vol = np.full(num_sims, sigma)
+    current_vol = np.full(num_sims, sigma)
+    asset_brownian_motion, vol_brownian_motion = generate_correlated_brownians(dt, (num_sims, num_steps - 1), rho)
     for t in tqdm.trange(1, num_steps):
         current_prices = paths[:, t - 1]
         # The GBM Formula says dS(t) = mu*S*dt + sigma*S*dW(t) 
@@ -48,3 +50,9 @@ def monte_carlo_price(call_or_put, paths, K, r, T):
         payoffs = np.maximum(0, K - paths[:,-1])
     # Discount payoffs to present value using risk free interest rate
     return np.mean(payoffs)*np.exp(-r*T)
+
+num_sims = 1
+num_steps = 100
+rho = -0.7
+dt = 1/252
+visualize_correlated_brownians(dt, num_sims, num_steps, rho)

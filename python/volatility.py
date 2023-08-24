@@ -5,44 +5,22 @@ import matplotlib.pyplot as plt
 
 # rolling window: number of previous days to consider when calculating vol
 def get_daily_historical_volatility(ticker, start_date, end_date, rolling_window):
-    data = yf.download(ticker, start=start_date, end=end_date)
+    start_fetch_date = pd.Timestamp(start_date) - pd.DateOffset(days=2 * rolling_window) # Adjust bc not every day is a trading day
+    data = yf.download(ticker, start=start_fetch_date, end=end_date)
 
     # Calculate rolling volatility
     data['Daily_Return'] = data['Adj Close'].pct_change()
-    data['Volatility'] = data['Daily_Return'].rolling(rolling_window).std()
+    data['Log_Return'] = np.log(data['Adj Close'] / data['Adj Close'].shift(1))
+    data['Volatility'] = data['Log_Return'].rolling(rolling_window).std()
     data['Annualized_Volatility'] = data['Volatility'] * np.sqrt(252)
     data = data.dropna() # Drop NaN values
+    data = data[data.index >= pd.Timestamp(start_date)] # removes days before start_date that were downloaded for calculations
     
     time_points = data.index
     annualized_volatilities = data['Annualized_Volatility'].values
+    print(data['Annualized_Volatility'])
     return time_points, annualized_volatilities
 
-# rolling window: number of previous hours to consider when calculating vol
-def get_hourly_volatility(stock_symbol, start_date, end_date, rolling_window):
-    data = yf.download(stock_symbol, start=start_date, end=end_date, interval="1h")
-
-    # Calculate rolling volatility for hours
-    data['Hourly_Return'] = data['Adj Close'].pct_change()
-    data['Volatility'] = data['Hourly_Return'].rolling(rolling_window).std()
-    data = data.dropna() # Drop NaN values
-    data['Annualized_Volatility'] = data['Volatility'] * np.sqrt(252 * 6.5) # 252 trading days 6.5 trading hours per day
-
-    
-    time_points = data.index
-    annualized_volatilities = data['Annualized_Volatility'].values
-    return time_points, annualized_volatilities
-
-# calculates daily volatility using hours inside the day
-def get_daily_volatility(stock_symbol, start_date, end_date):
-    data = yf.download(stock_symbol, start=start_date, end=end_date, interval="1h")
-    data['Hourly_Return'] = data['Adj Close'].pct_change()
-
-    # Group data by date and calculate daily volatility for each trading day
-    daily_volatility = data.groupby(data.index.date)['Hourly_Return'].std()
-    annualized_volatility = daily_volatility * np.sqrt(252)
-
-    return daily_volatility.index, annualized_volatility.values
-
-time_points, annualized_volatilities = get_daily_volatility('GOOG', '2022-01-01', '2023-01-01')
+time_points, annualized_volatilities = get_daily_historical_volatility('GOOG', '2023-08-01', '2023-08-23', 30)
 plt.plot(time_points, annualized_volatilities)
 plt.show()
