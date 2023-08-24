@@ -51,8 +51,19 @@ def monte_carlo_price(call_or_put, paths, K, r, T):
     # Discount payoffs to present value using risk free interest rate
     return np.mean(payoffs)*np.exp(-r*T)
 
-num_sims = 1
-num_steps = 100
-rho = -0.7
-dt = 1/252
-visualize_correlated_brownians(dt, num_sims, num_steps, rho)
+# Visualizes monte carlo paths
+# Include a strike price to include a line for in/out of money
+def visualize_paths(time_points, paths, strike_price=None):
+    for path in paths:
+        plt.plot(time_points, path)
+
+    if strike_price is not None:
+        plt.axhline(y=strike_price, color='r', linestyle='--', label=f'Strike Price ({strike_price:.2f})')
+        plt.legend()
+    
+    plt.xlabel('Time Steps (years)')
+    plt.ylabel('Asset Price')
+    plt.title('Monte Carlo Simulation for Asset Price')
+    plt.grid(True)
+    plt.show()
+

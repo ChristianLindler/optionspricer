@@ -1,10 +1,11 @@
-import blackScholes
-import monteCarlo
+from blackScholes import *
+from monteCarlo import *
 import matplotlib.pyplot as plt
 import yfinance as yf
 import numpy as np
 
-NUM_SIMS = 10
+
+NUM_SIMS = 1000
 NUM_STEPS = 1000
 
 def vol_dynamics(previous_prices, current_prices, previous_vol, vcr=-11):
@@ -39,15 +40,14 @@ def price_option(call_or_put, ticker, K, T, r, kappa):
     rho = -0.7
 
     # Drift set to risk free interest rate (risk neutral pricing)
-    time_points, paths = monteCarlo.generate_paths(NUM_SIMS, initial_price, r, volatility, NUM_STEPS, T, kappa, vol_of_vol, theta, rho)
-    mc_price = monteCarlo.monte_carlo_price(call_or_put, paths, K, r, T)
-    bc_price = blackScholes.black_scholes(call_or_put, initial_price, K, T, volatility, r)
+    time_points, paths = generate_paths(NUM_SIMS, initial_price, r, volatility, NUM_STEPS, T, kappa, vol_of_vol, theta, rho)
+    mc_price = monte_carlo_price(call_or_put, paths, K, r, T)
+    bc_price = black_scholes(call_or_put, initial_price, K, T, volatility, r)
+    
     print('MC:', mc_price)
     print('BS:', bc_price)
 
-    for path in paths:
-        plt.plot(time_points, path)
-    plt.show()
+    visualize_paths(time_points, paths, K)
     
 
 price_option('call', 'GOOG', 125, 3, 0.03, 3)
