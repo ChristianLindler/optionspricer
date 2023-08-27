@@ -1,5 +1,5 @@
 import './App.css';
-import OptionsPricer from './components/optionsPricer';
+import OptionsPricer from './components/OptionsPricer'
 
 function App() {
   return (

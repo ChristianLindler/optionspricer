@@ -31,8 +31,9 @@ def generate_paths(num_sims, S0, mu, sigma, num_steps, T, kappa, vol_of_vol, the
         # The GBM Formula says dS(t) = mu*S*dt + sigma*S*dW(t) 
         change_in_price = mu * paths[:, t - 1] * dt + current_vol * current_prices * asset_brownian_motion[:, t - 1]
         paths[:, t] = paths[:, t - 1] + change_in_price
+
         # The Heston model says dV(t) = k(theta - V)dt + vol_of_vol*V*dW(t) 
-        change_in_vol = kappa * (theta - current_vol) * dt + vol_of_vol * current_vol * vol_brownian_motion[:, t - 1]
+        change_in_vol = kappa * (theta - current_vol ** 2) * dt + vol_of_vol * current_vol * vol_brownian_motion[:, t - 1]
         current_vol += change_in_vol
     return time_points, paths
 

@@ -33,4 +33,4 @@ def visualize_correlated_brownians(dt, num_steps, rho, num_sims = 1):
 dt = 1/252
 num_steps = 100
 rho = -0.7
-visualize_correlated_brownians(dt, num_steps, rho)
+#visualize_correlated_brownians(dt, num_steps, rho)

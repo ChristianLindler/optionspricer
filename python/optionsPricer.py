@@ -5,8 +5,7 @@ import yfinance as yf
 import numpy as np
 
 
-NUM_SIMS = 1000
-NUM_STEPS = 1000
+NUM_STEPS = 100
 
 def vol_dynamics(previous_prices, current_prices, previous_vol, vcr=-11):
     return
@@ -26,29 +25,31 @@ def get_historical_volatility(ticker, num_days):
 # ticker: Stock ticker
 # K: Strike Price
 # T: Time to expiry
-# r: risk free interest rate
-# kappa: volatility mean reversion rate
-def price_option(call_or_put, ticker, K, T, r, kappa):
+# n: num simulations
+def price_option(call_or_put, ticker, K, T, n):
     stock_data = yf.Ticker(ticker)
     initial_price = stock_data.history(period="1d")["Close"].iloc[0]
     print('initial price', initial_price)
     
     # TEMP VALUES
     volatility = get_historical_volatility(ticker, 30)
-    theta = volatility
+    theta = volatility ** 2 # long term mean of variance
     vol_of_vol = 0.3
-    rho = -0.7
+    rho = -0.7 # brownian motion correlations
+    r = 0.03 # risk free interest rate
+    kappa = 3 # variance reversion rate
 
     # Drift set to risk free interest rate (risk neutral pricing)
-    time_points, paths = generate_paths(NUM_SIMS, initial_price, r, volatility, NUM_STEPS, T, kappa, vol_of_vol, theta, rho)
-    mc_price = monte_carlo_price(call_or_put, paths, K, r, T)
-    bc_price = black_scholes(call_or_put, initial_price, K, T, volatility, r)
+    time_points, heston_paths = generate_paths(n, initial_price, r, volatility, NUM_STEPS, T, kappa, vol_of_vol, theta, rho)
+    heston_price = monte_carlo_price(call_or_put, heston_paths, K, r, T)
+    bs_price = black_scholes(call_or_put, initial_price, K, T, volatility, r)
     
-    print('MC:', mc_price)
-    print('BS:', bc_price)
+    print('HS:', heston_price)
+    print('BS:', bs_price)
+    return heston_price, heston_paths.tolist()
 
-    visualize_paths(time_points, paths, K)
+    #visualize_paths(time_points, heston_paths, K)
     
 
-price_option('call', 'GOOG', 125, 3, 0.03, 3)
+#price_option(150, 'call', 'GOOG', 125, 3)
 #print(get_historical_volatility('GOOG', 30))
