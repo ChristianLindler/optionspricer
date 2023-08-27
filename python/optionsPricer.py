@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import yfinance as yf
 import numpy as np
 
-
 NUM_STEPS = 100
 
 def vol_dynamics(previous_prices, current_prices, previous_vol, vcr=-11):
@@ -41,15 +40,16 @@ def price_option(call_or_put, ticker, K, T, n):
 
     # Drift set to risk free interest rate (risk neutral pricing)
     time_points, heston_paths = generate_paths(n, initial_price, r, volatility, NUM_STEPS, T, kappa, vol_of_vol, theta, rho)
-    heston_price = monte_carlo_price(call_or_put, heston_paths, K, r, T)
+    heston_price, heston_price_std, heston_payoff_std = monte_carlo_price(call_or_put, heston_paths, K, r, T)
     bs_price = black_scholes(call_or_put, initial_price, K, T, volatility, r)
     
-    print('HS:', heston_price)
+    print(f"HS: {heston_price:.3f}, Price STD: {heston_price_std:.3f}, Payoff STD: {heston_payoff_std:.3f}")
     print('BS:', bs_price)
-    return heston_price, heston_paths.tolist()
+
+    return heston_price, heston_paths.tolist(), heston_price_std, heston_payoff_std
 
     #visualize_paths(time_points, heston_paths, K)
     
 
-#price_option(150, 'call', 'GOOG', 125, 3)
+#price_option('call', 'GOOG', 125, 3, 10000)
 #print(get_historical_volatility('GOOG', 30))
