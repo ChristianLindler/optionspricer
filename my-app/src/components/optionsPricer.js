@@ -15,10 +15,13 @@ const OptionsPricer = () => {
     const calculateOptionPrice = async () => {
       setCalculating(true)
       try {
-        const response = await fetch('http://localhost:5000/price_option', {
+        const response = await fetch('http://localhost:4000/price_option', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            // 'Access-Control-Allow-Origin': 'http:/localhost:5000/price_option',
+            // 'Access-Control-Allow-Methods': 'DELETE, POST, GET, OPTIONS',
+            // 'Access-Control-Allow-Headers':  'Content-Type, Authorization, X-Requested-With',
           },
           body: JSON.stringify({
             callOrPut: callOrPut,
