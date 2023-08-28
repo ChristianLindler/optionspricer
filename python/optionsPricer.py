@@ -37,7 +37,7 @@ def price_option(call_or_put, ticker, K, T, n):
     vol_of_vol = 0.3
     rho = -0.7 # brownian motion correlations
     r = 0.03 # risk free interest rate
-    kappa = 3 # variance reversion rate
+    kappa = 50 # variance reversion rate
 
     # Drift set to risk free interest rate (risk neutral pricing)
     time_points, heston_paths = generate_paths(n, initial_price, r, volatility, NUM_STEPS, T, kappa, vol_of_vol, theta, rho)

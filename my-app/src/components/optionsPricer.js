@@ -48,66 +48,73 @@ const OptionsPricer = () => {
 
     return (
         <div>
-          <h1>Monte Carlo Options Pricer</h1>
-          <form>
-            <label>
+          <div className="row mx-auto mb-4">
+            <form className="col-md-2">
+              <label>
+                <input
+                  type="radio"
+                  value="call"
+                  checked={callOrPut === 'call'}
+                  onChange={handleOptionChange}
+                />
+                Call
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="put"
+                  checked={callOrPut === 'put'}
+                  onChange={handleOptionChange}
+                />
+                Put
+              </label>
+            </form>
+            <div className="col-md-2">
+              <label>Ticker:</label>
               <input
-                type="radio"
-                value="call"
-                checked={callOrPut === 'call'}
-                onChange={handleOptionChange}
+                className="form-control"
+                type="text"
+                name="ticker"
+                value={ticker}
+                onChange={(event) => setTicker(event.target.value)}
               />
-              Call
-            </label>
-            <label>
+            </div>
+            <div className="col-md-2">
+              <label>Strike Price:</label>
               <input
-                type="radio"
-                value="put"
-                checked={callOrPut === 'put'}
-                onChange={handleOptionChange}
+                className="form-control"
+                type="number"
+                name="strikePrice"
+                value={strikePrice}
+                onChange={(event) => setStrikePrice(event.target.value)}
               />
-              Put
-            </label>
-          </form>
-          <div>
-            <label>Ticker:</label>
-            <input
-              type="text"
-              name="ticker"
-              value={ticker}
-              onChange={(event) => setTicker(event.target.value)}
-            />
+            </div>
+            <div className="col-md-2">
+              <label>Years to Expiry:</label>
+              <input
+                className="form-control"
+                type="number"
+                name="timeToExpiration"
+                value={timeToExpiry}
+                onChange={(event) => setTimeToExpiry(event.target.value)}
+              />
+            </div>
+            <div className="col-md-2">
+              <label>Number of Simulations:</label>
+              <input
+                className="form-control"
+                type="number"
+                name="simulations"
+                value={numSims}
+                onChange={(event) => setNumSims(event.target.value)}
+              />
+            </div>
           </div>
-          <div>
-            <label>Strike Price:</label>
-            <input
-              type="number"
-              name="strikePrice"
-              value={strikePrice}
-              onChange={(event) => setStrikePrice(event.target.value)}
-            />
+          <button onClick={calculateOptionPrice} className="btn btn-primary">Calculate</button>
+          <h2 className="mt-4">Option Price: {calculating ? 'loading' : optionPrice}</h2>
+          <div className="chart-container mx-auto mb-4" style={{ width: '100%', maxWidth: '1000px', height: '500px' }}>
+            <StockPriceChart paths={paths} strikePrice={strikePrice} />
           </div>
-          <div>
-            <label>Time to Expiration (years):</label>
-            <input
-              type="number"
-              name="timeToExpiration"
-              value={timeToExpiry}
-              onChange={(event) => setTimeToExpiry(event.target.value)}
-            />
-          </div>
-          <div>
-            <label>Number of Simulations:</label>
-            <input
-              type="number"
-              name="simulations"
-              value={numSims}
-              onChange={(event) => setNumSims(event.target.value)}
-            />
-          </div>
-          <button onClick={calculateOptionPrice}>Calculate</button>
-          <h2>Option Price: {calculating ? 'loading' : optionPrice}</h2>
-          {paths ? <StockPriceChart paths={paths} /> : <h1></h1>}
         </div>
       )
 }

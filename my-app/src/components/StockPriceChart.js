@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 import Chart from 'chart.js/auto'
+import ChartAnnotationsPlugin from 'chartjs-plugin-annotation';
+Chart.register(ChartAnnotationsPlugin);
 
-function StockPriceChart({ paths }) {
+function StockPriceChart({ paths, strikePrice }) {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
@@ -41,6 +43,22 @@ function StockPriceChart({ paths }) {
             legend: {
               display: false,
             },
+            annotation: {
+              annotations: [
+                {
+                  type: 'line',
+                  mode: 'horizontal',
+                  scaleID: 'y',
+                  value: strikePrice,
+                  borderColor: 'red',
+                  borderWidth: 1,
+                  label: {
+                    enabled: true,
+                    content: 'Strike Price',
+                  },
+                },
+              ],
+            }
           }
         }
       });
