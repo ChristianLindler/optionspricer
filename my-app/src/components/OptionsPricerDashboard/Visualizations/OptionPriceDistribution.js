@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Chart from 'chart.js/auto'
 import ChartAnnotationsPlugin from 'chartjs-plugin-annotation'
 Chart.register(ChartAnnotationsPlugin)
@@ -19,7 +19,7 @@ const OptionPriceDistribution = ({ mean, stdDev }) => {
       // Calculate PDF values based on mean and stdDev
       const xValues = []
       const pdfValues = []
-      for (let x = mean - 3 * stdDev; x <= mean + 3 * stdDev; x += 0.1) {
+      for (let x = mean - 3 * stdDev; x <= mean + 3 * stdDev; x += stdDev/20) {
         xValues.push(x.toFixed(2))
         pdfValues.push(
           calculateNormalDistributionPDF(x, mean, stdDev)
@@ -36,7 +36,7 @@ const OptionPriceDistribution = ({ mean, stdDev }) => {
               borderWidth: 1,
               fill: false,
               borderColor: 'blue',
-              label: 'PDF',
+              label: 'Probability Density',
               pointStyle: 'none',
               pointRadius: 0
             },

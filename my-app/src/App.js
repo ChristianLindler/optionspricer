@@ -1,12 +1,23 @@
 import './App.css';
-import OptionsPricer from './components/OptionsPricer'
+import OptionsPricerDashboard from './components/OptionsPricerDashboard'
+import { ColorModeContext, useMode } from './theme'
+import { ThemeProvider, CssBaseline } from '@material-ui/core'
 
 function App() {
+  const [theme, colorMode] = useMode()
   return (
-    <div className="App">
-      <h1 className="mt-5 mb-4">Monte Carlo Options Pricer</h1>
-      <OptionsPricer />
-    </div>
+    //<ColorModeContext.Provider value={colorMode}>
+      //<ThemeProvider theme={theme}>
+        //<CssBaseline>
+          <main className='content'>
+            <div className="App">
+              <h1 className="mt-5 mb-4">Monte Carlo Options Pricer</h1>
+              <OptionsPricerDashboard />
+            </div>
+          </main>
+        //</CssBaseline>
+      //</ThemeProvider>
+    //</ColorModeContext.Provider>
   );
 }
 
