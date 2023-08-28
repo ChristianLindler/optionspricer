@@ -46,7 +46,7 @@ def price_option(call_or_put, ticker, K, T, n):
     print(f"HS: {heston_price:.3f}, Price STD: {heston_price_std:.3f}, Payoff STD: {heston_payoff_std:.3f}")
     print('BS:', bs_price)
 
-    return heston_price, heston_paths.tolist(), heston_price_std, heston_payoff_std
+    return heston_price, heston_paths.tolist(), heston_price_std, heston_payoff_std, bs_price
 
     #visualize_paths(time_points, heston_paths, K)
     

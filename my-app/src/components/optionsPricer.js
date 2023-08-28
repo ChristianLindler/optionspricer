@@ -10,6 +10,7 @@ const OptionsPricer = () => {
     const [timeToExpiry, setTimeToExpiry] = useState(3)
     const [numSims, setNumSims] = useState(100)
     const [optionPrice, setOptionPrice] = useState(null)
+    const [blackScholesPrice, setBlackScholesPrice] = useState(null)
     const [optionPriceStdev, setOptionPriceStdev] = useState(null)
     const [calculating, setCalculating] = useState(false)
     const [paths, setPaths] = useState([])
@@ -41,6 +42,7 @@ const OptionsPricer = () => {
         setOptionPrice(data.option_price)
         setPaths(data.paths)
         setOptionPriceStdev(data.price_std)
+        setBlackScholesPrice(data.bs_price)
       } catch (error) {
         console.error('Error calculating option price:', error)
       }
@@ -118,6 +120,7 @@ const OptionsPricer = () => {
           </div>
           <button onClick={calculateOptionPrice} className="btn btn-primary">Calculate</button>
           <h2 className="mt-4">Option Price: {calculating ? 'loading' : optionPrice}</h2>
+          <h2 className="mt-4">Black Scholes Price: {calculating ? 'loading' : blackScholesPrice}</h2>
           <div className="row"></div>
           <div className="row">
             <div className="chart-container mx-auto mb-4 col-md-6" style={{ width: '100%', maxWidth: '500px', height: '500px' }}>
@@ -125,6 +128,7 @@ const OptionsPricer = () => {
             </div>
             <div className="chart-container mx-auto mb-4 col-md-6" style={{ width: '100%', maxWidth: '500px', height: '500px' }}>
               <OptionPriceDistribution mean={optionPrice} stdDev={optionPriceStdev} />
+              <h1>std: {optionPriceStdev}</h1>
             </div>
           </div>
         </div>

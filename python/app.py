@@ -26,7 +26,7 @@ def calculate_option_price():
     T = int(data['T'])
     num_sims = int(data['numSims'])
 
-    option_price, paths, price_std, payoff_std = price_option(call_or_put, ticker, K, T, num_sims)
+    option_price, paths, price_std, payoff_std, bs_price = price_option(call_or_put, ticker, K, T, num_sims)
     sample_paths = paths[:num_sample_paths]
     response = jsonify(
         {
@@ -34,9 +34,9 @@ def calculate_option_price():
             'paths': sample_paths,
             'price_std': price_std,
             'payoff_std': payoff_std,
+            'bs_price': bs_price
         }
     )
-    response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
 if __name__ == '__main__':

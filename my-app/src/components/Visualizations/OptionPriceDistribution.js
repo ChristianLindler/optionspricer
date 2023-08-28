@@ -8,7 +8,7 @@ const OptionPriceDistribution = ({ mean, stdDev }) => {
   const chartInstance = useRef(null)
 
   useEffect(() => {
-    if (chartRef.current) {
+    if (true) {
       const ctx = chartRef.current.getContext('2d')
 
       // Destroy the previous chart if it exists
@@ -47,49 +47,19 @@ const OptionPriceDistribution = ({ mean, stdDev }) => {
             legend: {
               display: false,
             },
-            annotation: {
-              annotations: [
-                {
-                  drawTime: "afterDatasetsDraw",
-                  type: 'line',
-                  mode: 'vertical',
-                  scaleID: 'x',
-                  value: (mean - stdDev).toFixed(2),
-                  borderColor: 'green',
-                  borderWidth: 1,
-                  label: {
-                    enabled: true,
-                    content: 'Mean - 1 Stdev',
-                  },
-                },
-                {
-                  drawTime: "afterDatasetsDraw",
-                  type: 'line',
-                  mode: 'vertical',
-                  scaleID: 'x',
-                  value: (mean + stdDev).toFixed(2),
-                  borderColor: 'orange',
-                  borderWidth: 1,
-                  label: {
-                    enabled: true,
-                    content: 'Mean + 1 Stdev',
-                  },
-                },
-              ],
-            },
           },
         },
       });
     }
-  }, [mean, stdDev]);
+  }, [mean, stdDev])
 
   function calculateNormalDistributionPDF(x, mean, stdDev) {
-    const a = 1 / (stdDev * Math.sqrt(2 * Math.PI));
-    const b = Math.exp(-Math.pow(x - mean, 2) / (2 * Math.pow(stdDev, 2)));
-    return a * b;
+    const a = 1 / (stdDev * Math.sqrt(2 * Math.PI))
+    const b = Math.exp(-Math.pow(x - mean, 2) / (2 * Math.pow(stdDev, 2)))
+    return a * b
   }
 
-  return <canvas ref={chartRef} />;
+  return <canvas ref={chartRef} />
 }
 
-export default OptionPriceDistribution;
+export default OptionPriceDistribution
