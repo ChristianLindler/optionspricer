@@ -45,12 +45,21 @@ def generate_paths(num_sims, S0, mu, sigma, num_steps, T, kappa, vol_of_vol, the
 # T: time until expiry (years)
 def monte_carlo_price(call_or_put, paths, K, r, T):
     paths = np.array(paths)
+    N = len(paths)
     if call_or_put == 'call':
         payoffs = np.maximum(0, paths[:,-1] - K)
     elif call_or_put == 'put':
         payoffs = np.maximum(0, K - paths[:,-1])
+    else:
+        print(f"Unusable value for call_or_put: {call_or_put}")
+        return None, None, None
     # Discount payoffs to present value using risk free interest rate
-    return np.mean(payoffs)*np.exp(-r*T)
+    discounted_payoffs = payoffs * np.exp(-r*T)
+    mean_payoff = np.mean(discounted_payoffs)
+    payoff_sample_std = np.std(discounted_payoffs, ddof=1)
+    mean_payoff_sample_std = payoff_sample_std / np.sqrt(N)
+    return mean_payoff, mean_payoff_sample_std, payoff_sample_std
+
 
 # Visualizes monte carlo paths
 # Include a strike price to include a line for in/out of money
