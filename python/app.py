@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from optionsPricer import price_option
+from options_pricer import price_option
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
