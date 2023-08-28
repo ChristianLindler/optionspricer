@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import "bootstrap/dist/css/bootstrap.min.css"
-import StockPriceChart from './StockPriceChart'
+import StockPriceChart from './Visualizations/StockPriceChart'
+import OptionPriceDistribution from "./Visualizations/OptionPriceDistribution"
 
 const OptionsPricer = () => {
     const [ticker, setTicker] = useState('GOOG')
@@ -9,6 +10,7 @@ const OptionsPricer = () => {
     const [timeToExpiry, setTimeToExpiry] = useState(3)
     const [numSims, setNumSims] = useState(100)
     const [optionPrice, setOptionPrice] = useState(null)
+    const [optionPriceStdev, setOptionPriceStdev] = useState(null)
     const [calculating, setCalculating] = useState(false)
     const [paths, setPaths] = useState([])
 
@@ -35,6 +37,7 @@ const OptionsPricer = () => {
         const data = await response.json()
         setOptionPrice(data.option_price)
         setPaths(data.paths)
+        setOptionPriceStdev(data.price_std)
       } catch (error) {
         console.error('Error calculating option price:', error)
       }
@@ -112,8 +115,14 @@ const OptionsPricer = () => {
           </div>
           <button onClick={calculateOptionPrice} className="btn btn-primary">Calculate</button>
           <h2 className="mt-4">Option Price: {calculating ? 'loading' : optionPrice}</h2>
-          <div className="chart-container mx-auto mb-4" style={{ width: '100%', maxWidth: '1000px', height: '500px' }}>
-            <StockPriceChart paths={paths} strikePrice={strikePrice} />
+          <div className="row"></div>
+          <div className="row">
+            <div className="chart-container mx-auto mb-4 col-md-6" style={{ width: '100%', maxWidth: '500px', height: '500px' }}>
+              <StockPriceChart paths={paths} strikePrice={strikePrice} />
+            </div>
+            <div className="chart-container mx-auto mb-4 col-md-6" style={{ width: '100%', maxWidth: '500px', height: '500px' }}>
+              <OptionPriceDistribution mean={optionPrice} stdDev={optionPriceStdev} />
+            </div>
           </div>
         </div>
       )
