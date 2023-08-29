@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Chart from 'chart.js/auto'
 import ChartAnnotationsPlugin from 'chartjs-plugin-annotation'
+import { theme } from '../../../theme'
 Chart.register(ChartAnnotationsPlugin)
 
 const OptionPriceDistribution = ({ mean, stdDev }) => {
@@ -34,7 +35,8 @@ const OptionPriceDistribution = ({ mean, stdDev }) => {
             data: pdfValues,
             borderWidth: 1,
             fill: false,
-            borderColor: 'blue',
+            borderColor: theme.colors.secondary,
+            borderWidth: 3,
             label: 'Probability Density',
             pointStyle: 'none',
             pointRadius: 0

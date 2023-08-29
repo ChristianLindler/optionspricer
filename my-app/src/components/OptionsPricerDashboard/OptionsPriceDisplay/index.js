@@ -26,12 +26,12 @@ const OptionsPriceDisplay = ({ optionPrice, stdDev }) => {
     <div className="option-box">
       <div className="option-price">
         
-        <p className={classes.secondaryText}>Option Price</p>
-        <h2 className={classes.primaryText}>${optionPrice}</h2>
+        <p className={classes.secondaryText}>Option Price:</p>
+        <h2 className={classes.primaryText}>${Number(optionPrice).toFixed(2)}</h2>
       </div>
       <div className={classes.secondaryText}>
-        <p>68% Confidence Interval</p>
-        <p>${(optionPrice - stdDev)} - ${(optionPrice + stdDev)}</p>
+        <p>68% Confidence Interval:</p>
+        <p>${(optionPrice - stdDev).toFixed(2)} - ${(optionPrice + stdDev).toFixed(2)}</p>
       </div>
     </div>
   )

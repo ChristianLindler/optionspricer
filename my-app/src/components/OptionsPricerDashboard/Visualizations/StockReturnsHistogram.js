@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect, useRef } from 'react'
 import { Chart } from 'chart.js/auto'
+import { theme } from '../../../theme'
 
 const StockReturnsHistogram = ({ paths, strikePrice, numBins }) => {
   const chartRef = useRef(null)
@@ -43,6 +44,7 @@ const StockReturnsHistogram = ({ paths, strikePrice, numBins }) => {
         {
           label: 'Frequency',
           data: binCounts,
+          backgroundColor: theme.colors.secondary
         },
       ],
     }
