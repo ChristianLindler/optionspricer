@@ -1,28 +1,28 @@
 import React, { useEffect, useRef } from 'react'
 import Chart from 'chart.js/auto'
-import ChartAnnotationsPlugin from 'chartjs-plugin-annotation';
-Chart.register(ChartAnnotationsPlugin);
+import ChartAnnotationsPlugin from 'chartjs-plugin-annotation'
+Chart.register(ChartAnnotationsPlugin)
 
 const StockPriceChart = ({ paths, strikePrice }) => {
-  const chartRef = useRef(null);
-  const chartInstance = useRef(null);
+  const chartRef = useRef(null)
+  const chartInstance = useRef(null)
 
   useEffect(() => {
     // Destroy the previous chart when the component is unmounted
     return () => {
       if (chartInstance.current) {
-        chartInstance.current.destroy();
+        chartInstance.current.destroy()
       }
-    };
-  }, []);
+    }
+  }, [])
 
   useEffect(() => {
-    if (chartRef.current && Array.isArray(paths) && paths.length > 0) {
-      const ctx = chartRef.current.getContext('2d');
+    if (chartRef.current && paths) {
+      const ctx = chartRef.current.getContext('2d')
 
       // Destroy the previous chart if it exists
       if (chartInstance.current) {
-        chartInstance.current.destroy();
+        chartInstance.current.destroy()
       }
 
       chartInstance.current = new Chart(ctx, {
@@ -61,14 +61,14 @@ const StockPriceChart = ({ paths, strikePrice }) => {
             }
           }
         }
-      });
+      })
     }
-  }, [paths, strikePrice]);
+  }, [paths, strikePrice])
 
-  return <canvas ref={chartRef} />;
+  return <canvas ref={chartRef} width={'100%'}/>
 }
 
-export default StockPriceChart;
+export default StockPriceChart
 
 
 
