@@ -10,9 +10,10 @@ export const theme = {
     typography: {
         fontFamily: {
             primary: 'Poppins, sans-serif',
-            secondary: 'Source Sans 3',
+            secondary: 'Open Sans, sans-serif',
         },
         fontSize: {
+            xs: '12px',
             small: '14px',
             medium: '16px',
             large: '24px',

@@ -23,8 +23,8 @@ const useStyles = makeStyles({
 const OptionsPriceDisplay = ({ optionPrice, stdDev }) => {
   const classes = useStyles()
   return (
-    <div className="option-box">
-      <div className="option-price">
+    <div className='option-box'>
+      <div className='option-price'>
         
         <p className={classes.secondaryText}>Option Price:</p>
         <h2 className={classes.primaryText}>${Number(optionPrice).toFixed(2)}</h2>

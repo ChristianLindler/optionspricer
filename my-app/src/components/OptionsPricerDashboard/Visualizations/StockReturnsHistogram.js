@@ -39,7 +39,7 @@ const StockReturnsHistogram = ({ paths, strikePrice, numBins }) => {
 
     // Prepare chart data
     const chartData = {
-      labels: binRanges.map(range => range[0].toFixed(2)), // Display only the lower bound
+      labels: binRanges.map(range => range[0].toFixed(2)),
       datasets: [
         {
           label: 'Frequency',

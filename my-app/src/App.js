@@ -4,6 +4,8 @@ import Header from './components/Header'
 import OptionsPricerDashboard from './components/OptionsPricerDashboard'
 import { theme } from './theme'
 import { makeStyles } from '@material-ui/core'
+import ModelExplanation from './components/ModelExplanation'
+import Footer from './components/Footer'
 
 const useStyles = makeStyles({
   app: {
@@ -28,8 +30,9 @@ function App() {
           {activePage === 'dashboard' ? 
             <OptionsPricerDashboard className={classes.dashboard}/>
           :
-            <h1/>
+            <ModelExplanation/>
           }
+          <Footer/>
         </div>
       </div>
     </main>
