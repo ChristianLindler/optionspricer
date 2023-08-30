@@ -44,7 +44,9 @@ const StockReturnsHistogram = ({ paths, strikePrice, numBins }) => {
         {
           label: 'Frequency',
           data: binCounts,
-          backgroundColor: theme.colors.secondary
+          backgroundColor: theme.colors.secondary,
+          borderWidth: 1,
+          borderColor: theme.colors.secondary,
         },
       ],
     }

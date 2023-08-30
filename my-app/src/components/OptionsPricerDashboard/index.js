@@ -57,7 +57,7 @@ const OptionsPricerDashboard = () => {
 
       <Grid item xs={4}>
         <Paper className={classes.paper} elevation={10}>
-          <StockPriceDistribution paths={paths} strikePrice={strikePrice} numBins={20}/>
+          <StockPriceDistribution paths={paths} strikePrice={strikePrice} numBins={30}/>
         </Paper>
       </Grid>
 
@@ -81,7 +81,7 @@ const OptionsPricerDashboard = () => {
         <Paper className={classes.paper} elevation={10}>
           <StockPriceChart paths={paths} strikePrice={strikePrice} />
           <Typography className={classes.secondaryText}>{
-            '*While the model will simulate up to 10,000 paths, only up to 100 will be graphed'
+            '*While the model will simulate up to 100,000 paths, only up to 100 will be graphed'
           }</Typography>
           
         </Paper>

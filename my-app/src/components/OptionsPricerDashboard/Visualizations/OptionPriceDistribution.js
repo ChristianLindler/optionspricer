@@ -34,7 +34,8 @@ const OptionPriceDistribution = ({ mean, stdDev }) => {
           {
             data: pdfValues,
             borderWidth: 1,
-            fill: false,
+            backgroundColor: theme.colors.lighterSecondary,
+            fill: true,
             borderColor: theme.colors.secondary,
             borderWidth: 3,
             label: 'Probability Density',
