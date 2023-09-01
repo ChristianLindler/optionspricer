@@ -2,6 +2,7 @@
 
 from black_scholes import black_scholes
 from monte_carlo import generate_paths, monte_carlo_price
+from options import longstaff_schwartz, get_implied_vol
 import yfinance as yf
 import numpy as np
 
@@ -36,7 +37,7 @@ def price_option(call_or_put, ticker, K, T, n):
     print('initial price', initial_price)
     
     # TEMP VALUES
-    volatility = get_historical_volatility(ticker, 30)
+    volatility = get_implied_vol(ticker, 30)
     theta = volatility ** 2 # long term mean of variance
     vol_of_vol = 0.3
     rho = -0.7 # brownian motion correlations
@@ -50,6 +51,7 @@ def price_option(call_or_put, ticker, K, T, n):
     print(f"HS: {heston_price:.3f}, Price STD: {heston_price_std:.3f}, Payoff STD: {heston_payoff_std:.3f}")
     print('BS:', bs_price)
 
+    heston_price = longstaff_schwartz(heston_paths, call_or_put, K, r, T)
     return heston_price, heston_paths.tolist(), heston_price_std, heston_payoff_std, bs_price
 
     #visualize_paths(time_points, heston_paths, K)
