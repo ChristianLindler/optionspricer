@@ -29,7 +29,7 @@ const Header = ({ activePage, setActivePage }) => {
     <AppBar position='static' className={classes.header}>
       <Toolbar>
         <Typography className={classes.title}>
-          European Options Pricing with the Heston Model
+          Options Pricing with the Heston Model
         </Typography>
         <Button
           className={classes.button}

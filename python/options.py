@@ -51,50 +51,31 @@ def get_historical_vol(ticker):
     volatility = float(rows[5].find_all('td')[1].text.strip())
     return volatility
 
-def american_option_price(paths, strike_price, option_type, risk_free_rate, time_to_expiry, num_simulations=10000):
-    """
-    Prices an American option using Monte Carlo simulation.
-
-    Parameters:
-    - paths: List of arrays, where each array represents a path of stock prices.
-    - strike_price: The strike price of the option.
-    - option_type: 'call' for a call option, 'put' for a put option.
-    - risk_free_rate: The risk-free interest rate.
-    - time_to_expiry: Time to expiration of the option.
-    - num_simulations: Number of Monte Carlo simulations to run.
-
-    Returns:
-    - Estimated option price.
-    """
-
-    option_prices = []  # To store option prices for each path
-
-    for path in paths:
-        cashflows = []  # To store cashflows for this path
-
-        for price in path:
-            if option_type == 'call':
-                intrinsic_value = max(0, price - strike_price)
-            else:
-                intrinsic_value = max(0, strike_price - price)
-
-            # Calculate the continuation value (expected future value)
-            expected_future_value = np.exp(-risk_free_rate * time_to_expiry) * max(cashflows[-1], intrinsic_value) if cashflows else intrinsic_value
-
-            cashflows.append(expected_future_value)
-
-        # Determine the optimal exercise time and the option price for this path
-        if option_type == 'call':
-            option_price = max(cashflows[-1], intrinsic_value)
-        else:
-            option_price = max(cashflows[-1], intrinsic_value)
-
-        option_prices.append(option_price)
-
-    # Calculate the estimated option price as the average of option prices from all paths
-    estimated_option_price = np.mean(option_prices)
-
-    return estimated_option_price
+def price_european_option(call_or_put, paths, K, r, T):
+    '''
+    Finds discounted payoff of option using final prices of random walks
+    call_or_put: whether option is call or put (string)
+    paths: [num_paths][num_steps]
+    K: strike price
+    r: risk free interest rate
+    T: time until expiry (years)
+    Returns: mean payoff, mean payoff sample std, payoff sample std
+    '''
+    paths = np.array(paths)
+    N = len(paths)
+    if call_or_put == 'call':
+        payoffs = np.maximum(0, paths[:,-1] - K)
+    elif call_or_put == 'put':
+        payoffs = np.maximum(0, K - paths[:,-1])
+    else:
+        print(f'Unusable value for call_or_put: {call_or_put}')
+        return None, None, None
+    # Discount payoffs to present value using risk free interest rate
+    discounted_payoffs = payoffs * np.exp(-r*T)
+    mean_payoff = np.mean(discounted_payoffs)
+    payoff_sample_std = np.std(discounted_payoffs, ddof=1)
+    mean_payoff_sample_std = payoff_sample_std / np.sqrt(N)
+    return mean_payoff, mean_payoff_sample_std, payoff_sample_std
 
 def longstaff_schwartz(paths, call_or_put, strike_price, r, T):
     """
