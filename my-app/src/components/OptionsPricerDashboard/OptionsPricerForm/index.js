@@ -140,7 +140,12 @@ const OptionsPricerForm = ({ setOptionData }) => {
               autoFocus
               defaultValue={1}
               InputLabelProps={{style: {fontFamily: theme.typography.fontFamily.primary, color: 'white'}}}
-              InputProps={{style: {fontFamily: theme.typography.fontFamily.primary, color: 'white'}}}
+              InputProps={{
+                style: {fontFamily: theme.typography.fontFamily.primary, color: 'white'}
+              }}
+              inputProps={{
+                step: '0.01',
+              }}
             />
             <TextField
               className={classes.secondaryFontText}

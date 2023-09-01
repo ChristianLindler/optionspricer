@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Grid, Paper, makeStyles } from '@material-ui/core'
 import { theme } from '../../theme'
 import explanationText from './explanationText'
-import StockPriceChart from '../OptionsPricerDashboard/Visualizations/StockPriceChart'
+import DemoVis from './Visualizations/demoVis'
 
 const useStyles = makeStyles({
   container: {
@@ -53,13 +53,13 @@ const ModelExplanation = () => {
 
       <Grid item xs={4}>
         <Paper className={classes.paper} elevation={10}>
-          <StockPriceChart paths={[[0, 4, 3, 5, 4, 6, 5, 7, 9, 5, 7]]} strikePrice={0}/>
+          <DemoVis paths={[[0, 4, 3, 5, 4, 6, 5, 7, 9, 5, 7], [0, 3, 5, 6, 5, 8, 6, 8, 9, 5, 6]]}/>
         </Paper>
       </Grid>
 
       <Grid item xs={4}>
         <Paper className={classes.paper} elevation={10}>
-          <StockPriceChart paths={[[0, 4, 3, 5, 4, 6, 5, 7, 9, 5, 7]]} strikePrice={0}/>
+          <DemoVis paths={[[0, 4, 3, 5, 4, 6, 5, 7, 9, 5, 7], [0, 3, 5, 6, 5, 8, 6, 8, 9, 5, 6]]}/>
         </Paper>
       </Grid>
 
@@ -79,7 +79,7 @@ const ModelExplanation = () => {
 
       <Grid item xs={4}>
         <Paper className={classes.paper} elevation={10}>
-          <StockPriceChart paths={[[0, 4, 3, 5, 4, 6, 5, 7, 9, 5, 7]]} strikePrice={0}/>
+          <DemoVis paths={[[0, 4, 3, 5, 4, 6, 5, 7, 9, 5, 7], [0, 3, 5, 6, 5, 8, 6, 8, 9, 5, 6]]}/>
         </Paper>
       </Grid>
     </Grid>
