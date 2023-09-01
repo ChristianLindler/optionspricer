@@ -3,7 +3,7 @@ from options_pricer import price_option
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"price_option": {"origins": "http://localhost:3000"}})
+cors = CORS(app, resources={r'price_option': {'origins': 'http://localhost:3000'}})
 
 num_sample_paths = 150
 
@@ -27,11 +27,11 @@ def calculate_option_price():
     num_sims = int(data['numSims'])
 
     option_price, paths, price_std, payoff_std, bs_price = price_option(call_or_put, ticker, K, T, num_sims)
-    sample_paths = paths[:num_sample_paths]
+    #sample_paths = paths[:num_sample_paths]
     response = jsonify(
         {
             'option_price': option_price,
-            'paths': sample_paths,
+            'paths': paths,
             'price_std': price_std,
             'payoff_std': payoff_std,
             'bs_price': bs_price

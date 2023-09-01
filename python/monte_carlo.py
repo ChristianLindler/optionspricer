@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from brownian_motion import generate_correlated_brownians
 
 def generate_paths(num_sims, S0, mu, sigma, num_steps, T, kappa, vol_of_vol, theta, rho):
-    """
+    '''
     Generates sample paths for a stock using the Heston Model
     dS(t) = mu*S*dt + sigma*S*dW(t)
     dV(t) = k(theta - V)dt + vol_of_vol*V*dW(t)
@@ -22,7 +22,7 @@ def generate_paths(num_sims, S0, mu, sigma, num_steps, T, kappa, vol_of_vol, the
     theta: long term mean of variance
     rho: correlation for brownian motions
     Returns: time_points, paths
-    """
+    '''
     time_points = np.linspace(0, T, num_steps)
     dt = time_points[1]
     paths = np.full((num_sims, num_steps), S0)
@@ -45,7 +45,7 @@ def generate_paths(num_sims, S0, mu, sigma, num_steps, T, kappa, vol_of_vol, the
     return time_points, paths
 
 def monte_carlo_price(call_or_put, paths, K, r, T):
-    """
+    '''
     Finds discounted payoff of option using final prices of random walks
     call_or_put: whether option is call or put (string)
     paths: [num_paths][num_steps]
@@ -53,7 +53,7 @@ def monte_carlo_price(call_or_put, paths, K, r, T):
     r: risk free interest rate
     T: time until expiry (years)
     Returns: mean payoff, mean payoff sample std, payoff sample std
-    """
+    '''
     paths = np.array(paths)
     N = len(paths)
     if call_or_put == 'call':
@@ -61,7 +61,7 @@ def monte_carlo_price(call_or_put, paths, K, r, T):
     elif call_or_put == 'put':
         payoffs = np.maximum(0, K - paths[:,-1])
     else:
-        print(f"Unusable value for call_or_put: {call_or_put}")
+        print(f'Unusable value for call_or_put: {call_or_put}')
         return None, None, None
     # Discount payoffs to present value using risk free interest rate
     discounted_payoffs = payoffs * np.exp(-r*T)
@@ -71,13 +71,13 @@ def monte_carlo_price(call_or_put, paths, K, r, T):
     return mean_payoff, mean_payoff_sample_std, payoff_sample_std
 
 def visualize_paths(time_points, paths, strike_price=None):
-    """
+    '''
     Visualizes monte carlo paths
     Include a strike price to include a line for in/out of money
     time_points: array of time points
     paths: [num_paths][num_steps]
     strike_price: strike price of option
-    """
+    '''
     for path in paths:
         plt.plot(time_points, path)
 

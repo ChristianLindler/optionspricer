@@ -5,7 +5,7 @@ Chart.register(ChartAnnotationsPlugin)
 
 const numSamplePaths = 100
 
-const StockPriceChart = ({ paths, strikePrice }) => {
+const DemoVis = ({ paths }) => {
   paths = paths.length > numSamplePaths ? paths.slice(0, numSamplePaths) : paths
   const chartRef = useRef(null)
   const chartInstance = useRef(null)
@@ -46,33 +46,17 @@ const StockPriceChart = ({ paths, strikePrice }) => {
             legend: {
               display: false,
             },
-            annotation: {
-              annotations: [
-                {
-                  type: 'line',
-                  mode: 'horizontal',
-                  scaleID: 'y',
-                  value: strikePrice,
-                  borderColor: 'red',
-                  borderWidth: 1,
-                  label: {
-                    enabled: true,
-                    content: 'Strike Price',
-                  },
-                },
-              ],
-            }
           }
         }
       })
     }
-  }, [paths, strikePrice])
+  }, [paths])
 
   return <canvas ref={chartRef} width={'100%'}/>
 }
 
 
-export default StockPriceChart
+export default DemoVis
 
 
 
