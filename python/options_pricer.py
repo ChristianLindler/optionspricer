@@ -40,6 +40,7 @@ def price_option(call_or_put, ticker, K, T, n):
     rho = -0.7 # brownian motion correlations
     r = 0.041 # risk free interest rate
     kappa = 5 # variance reversion rate
+    dt = T/NUM_STEPS
 
     # Drift set to risk free interest rate (risk neutral pricing)
     time_points, heston_paths = generate_paths(n, initial_price, r, volatility, NUM_STEPS, T, kappa, vol_of_vol, theta, rho)
@@ -48,7 +49,8 @@ def price_option(call_or_put, ticker, K, T, n):
     print(f'HS: {heston_price:.3f}, Price STD: {heston_price_std:.3f}, Payoff STD: {heston_payoff_std:.3f}')
     print('BS:', bs_price)
 
-    heston_price = longstaff_schwartz(heston_paths, call_or_put, K, r, T)
+    heston_price = longstaff_schwartz(heston_paths, K, r, T, call_or_put)
+    #heston_price = gpt_longstaff_schwartz(heston_paths, call_or_put, K, r, T)
     return heston_price, heston_paths.tolist(), heston_price_std, heston_payoff_std, bs_price
 
     #visualize_paths(time_points, heston_paths, K)
