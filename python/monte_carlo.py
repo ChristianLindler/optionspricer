@@ -32,8 +32,8 @@ def generate_paths(num_sims, S0, mu, sigma, num_steps, T, kappa, vol_of_vol, the
         dt, (num_sims, num_steps - 1), rho)
     for t in tqdm.trange(1, num_steps):
         current_prices = paths[:, t - 1]
-        # The GBM Formula says dS(t) = mu*S*dt + sigma*S*dW(t)
-        change_in_price = mu * paths[:, t - 1] * dt  \
+        # The GBM Formula says dS(t) = mu*S*dt + sigma*S(t)*dW(t)
+        change_in_price = mu * current_prices * dt  \
             + current_vol * current_prices * asset_brownian_motion[:, t - 1]
         paths[:, t] = paths[:, t - 1] + change_in_price
 

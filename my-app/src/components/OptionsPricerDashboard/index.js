@@ -40,7 +40,7 @@ const useStyles = makeStyles({
 
 const OptionsPricerDashboard = () => {
   const [optionData, setOptionData] = useState({paths: [0]})
-  const { paths, optionPrice, optionPriceStdev, blackScholesPrice, strikePrice } = optionData
+  const { paths, usPrice, euPrice, usStdev, strikePrice } = optionData
 
   const classes = useStyles()
 
@@ -51,7 +51,6 @@ const OptionsPricerDashboard = () => {
           <div className={classes.flexContent}>
             <OptionsPricerForm setOptionData={setOptionData}/>
           </div>
-          
         </Paper>
       </Grid>
 
@@ -65,13 +64,13 @@ const OptionsPricerDashboard = () => {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Paper className={classes.coloredPaper} elevation={10}>
-              <OptionsPriceDisplay optionPrice={optionPrice} stdDev={optionPriceStdev} />
+              <OptionsPriceDisplay usPrice={usPrice} usStdev={usStdev} euPrice={euPrice} />
             </Paper>
           </Grid>
 
           <Grid item xs={12}>
             <Paper className={classes.paper} elevation={10}>
-              <OptionPriceDistribution mean={optionPrice} stdDev={optionPriceStdev} />
+              <OptionPriceDistribution mean={usPrice} stdDev={usStdev} />
             </Paper>
           </Grid>
         </Grid>
@@ -83,7 +82,6 @@ const OptionsPricerDashboard = () => {
           <Typography className={classes.secondaryText}>{
             '*While the model will simulate up to 100,000 paths, only up to 100 will be graphed'
           }</Typography>
-          
         </Paper>
       </Grid>
     </Grid>

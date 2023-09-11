@@ -60,10 +60,10 @@ const OptionsPricerForm = ({ setOptionData }) => {
       }
       const data = await response.json()
       setOptionData({
-        optionPrice: data.option_price,
-        optionPriceStdev: data.price_std,
+        usPrice: data.us_option_price,
+        euPrice: data.eu_option_price,
+        usStdev: data.us_price_std,
         paths: data.paths,
-        blackScholesPrice: data.bs_price,
         strikePrice: formData.get('strikePrice'),
       })
     } catch (error) {

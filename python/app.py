@@ -26,15 +26,16 @@ def calculate_option_price():
     T = int(data['T'])
     num_sims = int(data['numSims'])
 
-    option_price, paths, price_std, payoff_std, bs_price = price_option(call_or_put, ticker, K, T, num_sims)
+    us_option_price, eu_option_price, paths, us_price_std, payoff_std = price_option(call_or_put, ticker, K, T, num_sims)
+    print(us_option_price)
     #sample_paths = paths[:num_sample_paths]
     response = jsonify(
         {
-            'option_price': option_price,
+            'us_option_price': us_option_price,
+            'eu_option_price': eu_option_price,
             'paths': paths,
-            'price_std': price_std,
+            'us_price_std': us_price_std,
             'payoff_std': payoff_std,
-            'bs_price': bs_price
         }
     )
     return response

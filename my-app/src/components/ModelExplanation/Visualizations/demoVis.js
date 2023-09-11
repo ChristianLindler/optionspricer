@@ -5,7 +5,7 @@ Chart.register(ChartAnnotationsPlugin)
 
 const numSamplePaths = 100
 
-const DemoVis = ({ paths }) => {
+const DemoVis = ({ paths, annotationX, annotationY }) => {
   paths = paths.length > numSamplePaths ? paths.slice(0, numSamplePaths) : paths
   const chartRef = useRef(null)
   const chartInstance = useRef(null)
@@ -31,14 +31,14 @@ const DemoVis = ({ paths }) => {
       chartInstance.current = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: [...Array(paths[0].length).keys()], 
+          labels: [...Array(paths[0].length).keys()],
           datasets: paths.map((path) => ({
             data: path,
             borderWidth: 1,
             fill: false,
             label: '',
             pointStyle: 'none',
-            radius: 0
+            radius: 0,
           })),
         },
         options: {
@@ -46,18 +46,33 @@ const DemoVis = ({ paths }) => {
             legend: {
               display: false,
             },
-          }
-        }
+            annotation: {
+              annotations: [],
+            },
+          },
+        },
       })
-    }
-  }, [paths])
 
-  return <canvas ref={chartRef} width={'100%'}/>
+      // Add annotation if annotationX and annotationY are provided
+      if (annotationX !== undefined && annotationY !== undefined) {
+        const annotation = {
+          type: 'point',
+          xScaleID: 'x',
+          yScaleID: 'y',
+          xValue: annotationX,
+          yValue: annotationY,
+          borderColor: 'red',
+          borderWidth: 2,
+          radius: 5,
+        }
+
+        chartInstance.current.options.plugins.annotation.annotations.push(annotation)
+        chartInstance.current.update()
+      }
+    }
+  }, [paths, annotationX, annotationY])
+
+  return <canvas ref={chartRef} width={'100%'} />
 }
 
-
 export default DemoVis
-
-
-
-

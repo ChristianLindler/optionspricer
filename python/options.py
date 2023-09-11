@@ -107,23 +107,27 @@ def longstaff_schwartz(S, K, r, T, option_type='call'):
         raise ValueError("Invalid option_type. Use 'put' or 'call'.")
 
     cashflow = np.zeros_like(exercise_value)
-    cashflow[:, -1] = exercise_value[:, -1]
+    cashflow[:, -1] = exercise_value[:, -1] # No continuation value on final day, so set it equal to exercise value
 
     # Valuation by LS Method
     for t in range(num_steps - 2, 0, -1):
         itm = exercise_value[:, t] > 0
 
-        regression = np.polyfit(S[itm, t], cashflow[itm, t + 1] * df, 2)
+        regression = np.polyfit(S[itm, t], cashflow[itm, t + 1] * df, 3)
         continuation_value = np.polyval(regression, S[itm, t])
 
         exercise = np.zeros(len(itm), dtype=bool)
+        
         # paths where it is optimal to exercise
         exercise[itm] = exercise_value[itm, t] > continuation_value
+
         cashflow[exercise, t] = exercise_value[exercise, t]  # set V equal to H where it is optimal to exercise
         cashflow[exercise, t + 1 :] = 0  # set future cash flows, for that path, equal to zero
         discount_path = cashflow[:, t] == 0  # paths where we didn't exercise
         cashflow[discount_path, t] = cashflow[discount_path, t + 1] * df  # set V[t] in continuation region
 
+    
     # discounted expectation of V[t=1]
-    V0 = np.mean(cashflow[:, 1]) * df
-    return V0
+    option_price = np.mean(cashflow[:, 1]) * df
+    price_std = np.std(cashflow[:, 1] * df, ddof=1)
+    return option_price, price_std
