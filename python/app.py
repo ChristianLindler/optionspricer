@@ -30,7 +30,8 @@ def calculate_option_price():
     #sample_paths = paths[:num_sample_paths]
     response = jsonify(
         {
-            'option_price': option_price,
+            'us_option_price': us_option_price,
+            'eu_option_price': eu_option_price,
             'paths': paths,
             'us_price_std': us_price_std,
             'payoff_std': payoff_std,
