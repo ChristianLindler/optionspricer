@@ -9,9 +9,13 @@ import Footer from './components/Footer'
 
 const useStyles = makeStyles({
   app: {
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.palette.background,
+    minHeight: '100vh', // Make sure the content covers at least one screen height
+    display: 'flex',
+    flexDirection: 'column',
   },
   content: {
+    flex: 1, // Allow content to grow and take remaining space
     marginTop: 10,
     alignItems: 'center',
     display: 'flex',
@@ -22,20 +26,19 @@ const useStyles = makeStyles({
 function App() {
   const classes = useStyles()
   const [activePage, setActivePage] = useState('dashboard')
+
   return (
-    <main className='content'>
-      <div className={classes.app}>
-        <Header activePage={activePage} setActivePage={setActivePage} />
-        <div className={classes.content}>
-          {activePage === 'dashboard' ? 
-            <OptionsPricerDashboard className={classes.dashboard}/>
-          :
-            <ModelExplanation/>
-          }
-          <Footer/>
-        </div>
+    <div className={classes.app}>
+      <Header activePage={activePage} setActivePage={setActivePage} />
+      <div className={classes.content}>
+        {activePage === 'dashboard' ? 
+          <OptionsPricerDashboard className={classes.dashboard} />
+        :
+          <ModelExplanation />
+        }
       </div>
-    </main>
+      <Footer />
+    </div>
   )
 }
 

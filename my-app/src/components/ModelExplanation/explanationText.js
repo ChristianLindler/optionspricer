@@ -17,9 +17,9 @@ const explanationText = {
         title: 'The Longstaff-Schwartz Process',
         line1: `When estimating the price of a European option based on the provided asset paths, the procedure is relatively straightforward: you average the discounted payoffs at the end of these paths. However, the valuation of American options is a more intricate process due to their ability to be exercised at any time. The process involves the following steps:`,
         line2: `1. Begin by creating an exercise value matrix for the American option (max(K - S, 0) for puts, max(S-K, 0) for calls)`,
-        line3: `2. To construct a cash flow matrix, work backward in time. At each time step, fit a second-degree polynomial to the stock prices and their corresponding in-the-money cash flows. This essentially results in a function that calculates the continuation value based on the current asset price.`,
+        line3: `2. To construct a cash flow matrix, work backward in time. At each time step, use least squares to fit a polynomial to the spot prices and their corresponding cash flows. This resulting function calculates the continuation value based on the current asset price.`,
         line4: `3. Compare the exercise value to the continuation value. If the exercise value is greater than the continuation value, it is reasonable to assume that the option would be exercised. Consequently, the future cash flow for that path is set to zero.`,
-        line5: `4. In cases where the exercise value is less than the continuation value, calculate the cash flow at time t+1, discount it by a suitable factor, and assign it as the cash flow at time t.`,
+        line5: `4. In cases where the exercise value is less than the continuation value, discount the cash flow at time t+1 using the risk free interest rate to obtain the cash flow at time t.`,
         line6: `5. After constructing this cash flow matrix, average the initial cash flows across all paths to approximate the value of the American option.`,
         line7: `By following these steps, the Longstaff-Schwartz process provides a comprehensive method for estimating the value of American options, accounting for the flexibility of early exercise.`
       },

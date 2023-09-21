@@ -47,8 +47,7 @@ def price_option(call_or_put, ticker, K, T, n):
     time_points, heston_paths = generate_paths(n, initial_price, r, volatility, NUM_STEPS, T, kappa, vol_of_vol, theta, rho)
     us_price, us_price_std = longstaff_schwartz(heston_paths, K, r, T, call_or_put)
     eu_price, eu_price_std, discounted_payoff_std = price_european_option(call_or_put, heston_paths, K, r, T)
-    
-    return us_price, eu_price, heston_paths.tolist(), us_price_std, discounted_payoff_std
+    return us_price, eu_price, heston_paths.tolist(), us_price_std, eu_price_std, discounted_payoff_std
 
     
-# price_option('call', 'GOOG', 125, 3, 10000)
+#price_option('call', 'GOOG', 125, 3, 10000)

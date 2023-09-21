@@ -34,9 +34,9 @@ const OptionPriceDistribution = ({ mean, stdDev }) => {
           {
             data: pdfValues,
             borderWidth: 1,
-            backgroundColor: theme.colors.lighterSecondary,
+            backgroundColor: theme.palette.lighterSecondary,
             fill: true,
-            borderColor: theme.colors.secondary,
+            borderColor: theme.palette.secondary,
             borderWidth: 3,
             label: 'Probability Density',
             pointStyle: 'none',
@@ -48,6 +48,21 @@ const OptionPriceDistribution = ({ mean, stdDev }) => {
         plugins: {
           legend: {
             display: false,
+          },
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Probability Density',
+            },
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Option Price',
+            },
           },
         },
       },

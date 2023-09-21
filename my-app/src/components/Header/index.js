@@ -4,10 +4,10 @@ import { theme } from '../../theme'
 
 const useStyles = makeStyles(() => ({
   header: {
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.palette.primary,
   },
   title: {
-    color: theme.colors.secondary,
+    color: theme.palette.secondary,
     fontFamily: theme.typography.fontFamily.primary,
     fontSize: theme.typography.fontSize.large,
     flexGrow: 1,
@@ -36,8 +36,8 @@ const Header = ({ activePage, setActivePage }) => {
           style={{
             color:
               activePage === 'dashboard'
-                ? theme.colors.secondary
-                : theme.colors.text,
+                ? theme.palette.secondary
+                : theme.palette.text,
           }}
           onClick={() => handlePageChange('dashboard')}
           
@@ -49,12 +49,21 @@ const Header = ({ activePage, setActivePage }) => {
           style={{
             color:
               activePage === 'behindTheModel'
-                ? theme.colors.secondary
-                : theme.colors.text,
+                ? theme.palette.secondary
+                : theme.palette.text,
           }}
           onClick={() => handlePageChange('behindTheModel')}
         >
           Behind the Model
+        </Button>
+        <Button
+          className={classes.button}
+          style={{
+            color: theme.palette.text,
+          }}
+          onClick={() => window.location.href='https://github.com/ChristianLindler/optionspricer'}
+        >
+          GitHub
         </Button>
       </Toolbar>
     </AppBar>

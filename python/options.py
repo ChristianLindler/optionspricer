@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 import numpy as np
 import requests
-import yfinance
 
 # https://github.com/jknaudt21/Option-Scraper-BlackScholes/blob/master/Option%20Scraper.ipynb
 def get_tickers():
@@ -77,6 +76,9 @@ def price_european_option(call_or_put, paths, K, r, T):
     mean_payoff_sample_std = payoff_sample_std / np.sqrt(N)
     return mean_payoff, mean_payoff_sample_std, payoff_sample_std
 
+
+
+
 # https://www.youtube.com/watch?v=--Il6rgtVjM
 # https://github.com/cantaro86/Financial-Models-Numerical-Methods/blob/master/2.3%20American%20Options.ipynb
 # https://people.math.ethz.ch/~hjfurrer/teaching/LongstaffSchwartzAmericanOptionsLeastSquareMonteCarlo.pdf
@@ -110,13 +112,15 @@ def longstaff_schwartz(S, K, r, T, option_type='call'):
     cashflow[:, -1] = exercise_value[:, -1] # No continuation value on final day, so set it equal to exercise value
 
     # Valuation by LS Method
-    for t in range(num_steps - 2, 0, -1):
-        itm = exercise_value[:, t] > 0
+    for t in range(num_steps - 2, -1, -1):
+        itm = exercise_value[:, t] > 0 # matrix set to true where it is in the money
+        exercise = np.zeros(len(itm), dtype=bool) # array initially set to false for where we wille exercise
 
-        regression = np.polyfit(S[itm, t], cashflow[itm, t + 1] * df, 3)
-        continuation_value = np.polyval(regression, S[itm, t])
-
-        exercise = np.zeros(len(itm), dtype=bool)
+        if np.count_nonzero(itm) > 0:
+            regression = np.polyfit(S[itm, t], cashflow[itm, t + 1] * df, 2)
+            continuation_value = np.polyval(regression, S[itm, t])
+        else:
+            continuation_value = np.zeros(S[itm, t])
         
         # paths where it is optimal to exercise
         exercise[itm] = exercise_value[itm, t] > continuation_value
@@ -127,7 +131,9 @@ def longstaff_schwartz(S, K, r, T, option_type='call'):
         cashflow[discount_path, t] = cashflow[discount_path, t + 1] * df  # set V[t] in continuation region
 
     
-    # discounted expectation of V[t=1]
-    option_price = np.mean(cashflow[:, 1]) * df
-    price_std = np.std(cashflow[:, 1] * df, ddof=1)
+    # discounted expectation of V[t=0]
+    option_price = np.mean(cashflow[:, 0])
+    price_std = np.std(cashflow[:, 0], ddof=1)
+
     return option_price, price_std
+

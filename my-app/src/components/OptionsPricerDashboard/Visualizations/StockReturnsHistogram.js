@@ -44,9 +44,9 @@ const StockReturnsHistogram = ({ paths, strikePrice, numBins }) => {
         {
           label: 'Frequency',
           data: binCounts,
-          backgroundColor: theme.colors.secondary,
+          backgroundColor: theme.palette.secondary,
           borderWidth: 1,
-          borderColor: theme.colors.secondary,
+          borderColor: theme.palette.secondary,
         },
       ],
     }
@@ -71,7 +71,7 @@ const StockReturnsHistogram = ({ paths, strikePrice, numBins }) => {
           x: {
             title: {
               display: true,
-              text: 'Returns',
+              text: 'Returns on Final Day',
             },
           },
         },

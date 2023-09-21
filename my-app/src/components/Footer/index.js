@@ -4,7 +4,7 @@ import { theme } from '../../theme'
 
 const useStyles = makeStyles(() => ({
   footer: {
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.palette.primary,
     marginTop: 10,
     display: 'flex', // Add flex display
     justifyContent: 'space-between', // Align items horizontally
@@ -12,19 +12,15 @@ const useStyles = makeStyles(() => ({
     padding: '10px', // Add padding for better spacing
   },
   primaryText: {
-    color: theme.colors.secondary,
+    color: theme.palette.secondary,
     fontFamily: theme.typography.fontFamily.primary,
     fontSize: theme.typography.fontSize.small,
   },
   secondaryText: {
-    color: theme.colors.text,
+    color: theme.palette.text,
     fontFamily: theme.typography.fontFamily.secondary,
     fontSize: theme.typography.fontSize.xs,
     marginTop: '10px',
-  },
-  diagonalSplit: {
-    flex: '1', // Take up half of the available space
-    background: `linear-gradient(to bottom right, ${theme.colors.primary} 50%, transparent 50%)`, // Diagonal split
   },
 }))
 
@@ -43,7 +39,6 @@ const Footer = () => {
           GitHub
         </a>
       </div>
-      <div className={classes.diagonalSplit} />
     </AppBar>
   )
 }

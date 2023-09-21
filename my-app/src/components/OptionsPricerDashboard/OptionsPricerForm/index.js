@@ -11,18 +11,19 @@ import {
   FormControlLabel,
   Typography,
 } from '@material-ui/core'
+import { Alert } from '@mui/material'
 import { theme } from '../../../theme'
 
 const useStyles = makeStyles({
   button: {
     color: 'white',
     fontFamily: theme.typography.fontFamily.primary,
-    backgroundColor: theme.colors.secondary
+    backgroundColor: theme.palette.secondary
   },
   radioButton: {
     color: 'white',
     '&.Mui-checked': {
-      color: theme.colors.secondary
+      color: theme.palette.secondary
     },
   },
   secondaryText: {
@@ -31,14 +32,25 @@ const useStyles = makeStyles({
   }
 })
 
-const OptionsPricerForm = ({ setOptionData }) => {
-  const [calculating, setCalculating] = useState(false)
-
+const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calculating, setCalculating }) => {
   const classes = useStyles()
 
   const calculateOptionPrice = async (event) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
+
+    const callOrPut = formData.get('callOrPut')
+    const ticker = formData.get('ticker')
+    const K = formData.get('strikePrice')
+    const T = formData.get('timeToExpiry')
+    const numSims = formData.get('numSims')
+    
+    if (K < 0 || T < 0 || numSims < 2 || numSims > 100000) {
+      setAlertOpen(true)
+      setAlertMessage('Check the values entered in the form')
+      return
+    }
+
     setCalculating(true)
     try {
       const response = await fetch('http://localhost:4000/price_option', {
@@ -63,6 +75,7 @@ const OptionsPricerForm = ({ setOptionData }) => {
         usPrice: data.us_option_price,
         euPrice: data.eu_option_price,
         usStdev: data.us_price_std,
+        euStdev: data.eu_price_std,
         paths: data.paths,
         strikePrice: formData.get('strikePrice'),
       })
@@ -167,6 +180,7 @@ const OptionsPricerForm = ({ setOptionData }) => {
               variant='contained'
               sx={{ mt: 3, mb: 2 }}
               className={classes.button}
+              disabled={calculating}
             >
               Calculate
             </Button>

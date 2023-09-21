@@ -13,7 +13,7 @@ const useStyles = makeStyles({
   },
   paper: {
     borderRadius: '10px',
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.palette.primary,
     padding: '20px',
     display: 'flex',
     flexDirection: 'column',
@@ -21,7 +21,7 @@ const useStyles = makeStyles({
   },
   coloredPaper: {
     borderRadius: '10px',
-    backgroundColor: theme.colors.secondary,
+    backgroundColor: theme.palette.secondary,
     padding: '20px',
     display: 'flex',
     flexDirection: 'column',
@@ -40,7 +40,7 @@ const useStyles = makeStyles({
   button: {
     color: 'white',
     fontFamily: theme.typography.fontFamily.primary,
-    backgroundColor: theme.colors.secondary
+    backgroundColor: theme.palette.secondary
   },
 })
 

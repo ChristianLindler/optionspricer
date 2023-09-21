@@ -14,6 +14,7 @@ def everything_else():
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+
 # When front end makes POST request, we price option
 @app.route('/price_option', methods=['POST'])
 @cross_origin()
@@ -26,15 +27,14 @@ def calculate_option_price():
     T = int(data['T'])
     num_sims = int(data['numSims'])
 
-    us_option_price, eu_option_price, paths, us_price_std, payoff_std = price_option(call_or_put, ticker, K, T, num_sims)
-    print(us_option_price)
-    #sample_paths = paths[:num_sample_paths]
+    us_option_price, eu_option_price, paths, us_price_std, eu_price_std, payoff_std = price_option(call_or_put, ticker, K, T, num_sims)
     response = jsonify(
         {
             'us_option_price': us_option_price,
             'eu_option_price': eu_option_price,
             'paths': paths,
             'us_price_std': us_price_std,
+            'eu_price_std': eu_price_std,
             'payoff_std': payoff_std,
         }
     )
