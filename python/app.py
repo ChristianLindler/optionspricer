@@ -4,15 +4,15 @@ from flask_cors import CORS, cross_origin
 import os
 
 app = Flask(__name__)
+allowed_origins = ['https://optionspricerapp.com', 'https://christianlindler.github.io/optionspricer']
 CORS(app, resources={r"/price_option/*": {
-    "origins": "https://optionspricerapp.com", 
-                                          "allow_headers": ["Content-Type", "Authorization"]}})
+    "origins": '*'}})
 num_sample_paths = 150
 
 
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', 'https://optionspricerapp.com')
+    response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
     return response
