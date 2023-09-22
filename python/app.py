@@ -4,17 +4,11 @@ from flask_cors import CORS, cross_origin
 import os
 
 app = Flask(__name__)
-cors = CORS(app, resources={r'price_option': {'origins': 'https://optionspricerapp.com'}})
-
+CORS(app, resources={r"/price_option/*": {"origins": "https://optionspricerapp.com"}})
 num_sample_paths = 150
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
-    app.run(debug=False)
 
 @app.route('/price_option', methods=['GET', 'OPTIONS'])
-@cross_origin()
 def everything_else():
     response = jsonify({'nothing': 'not much'})
     response.headers.add('Access-Control-Allow-Origin', '*')
@@ -23,7 +17,6 @@ def everything_else():
 
 # When front end makes POST request, we price option
 @app.route('/price_option', methods=['POST'])
-@cross_origin()
 def calculate_option_price():
     # Get data
     data = request.get_json()
@@ -47,4 +40,5 @@ def calculate_option_price():
     return response
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=80)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
