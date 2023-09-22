@@ -1,11 +1,17 @@
 from flask import Flask, request, jsonify
 from options_pricer import price_option
 from flask_cors import CORS, cross_origin
+import os
 
 app = Flask(__name__)
 cors = CORS(app, resources={r'price_option': {'origins': 'https://optionspricerapp.com'}})
 
 num_sample_paths = 150
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
+    app.run(debug=False)
 
 @app.route('/price_option', methods=['GET', 'OPTIONS'])
 @cross_origin()
