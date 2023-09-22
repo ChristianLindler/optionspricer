@@ -10,10 +10,16 @@ CORS(app, resources={r"/price_option/*": {
 num_sample_paths = 150
 
 
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', 'https://optionspricerapp.com')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    return response
+
 @app.route('/price_option', methods=['GET', 'OPTIONS'])
 def everything_else():
     response = jsonify({'nothing': 'not much'})
-    response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
 
