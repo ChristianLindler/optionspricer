@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/optionspricer/static/css/main.286e8744.css",
-    "main.js": "/optionspricer/static/js/main.193dbbb8.js",
+    "main.js": "/optionspricer/static/js/main.20589773.js",
     "static/js/787.28cb0dcd.chunk.js": "/optionspricer/static/js/787.28cb0dcd.chunk.js",
     "index.html": "/optionspricer/index.html",
     "main.286e8744.css.map": "/optionspricer/static/css/main.286e8744.css.map",
-    "main.193dbbb8.js.map": "/optionspricer/static/js/main.193dbbb8.js.map",
+    "main.20589773.js.map": "/optionspricer/static/js/main.20589773.js.map",
     "787.28cb0dcd.chunk.js.map": "/optionspricer/static/js/787.28cb0dcd.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.286e8744.css",
-    "static/js/main.193dbbb8.js"
+    "static/js/main.20589773.js"
   ]
 }
