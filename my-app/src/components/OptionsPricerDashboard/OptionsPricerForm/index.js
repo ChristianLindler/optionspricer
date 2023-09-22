@@ -11,7 +11,6 @@ import {
   FormControlLabel,
   Typography,
 } from '@material-ui/core'
-import { Alert } from '@mui/material'
 import { theme } from '../../../theme'
 
 const useStyles = makeStyles({
@@ -53,7 +52,7 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
 
     setCalculating(true)
     try {
-      const response = await fetch('http://localhost:4000/price_option', {
+      const response = await fetch('https://optionspricerapp.com/price_option', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
