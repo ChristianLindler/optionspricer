@@ -52,7 +52,7 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
 
     setCalculating(true)
     try {
-      const response = await fetch('https://optionspricerapp.com/price_option', {
+      const response = await fetch('https://optionspricer-369a3f4b4a0f.herokuapp.com/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
