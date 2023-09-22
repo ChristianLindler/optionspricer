@@ -4,7 +4,9 @@ from flask_cors import CORS, cross_origin
 import os
 
 app = Flask(__name__)
-CORS(app, resources={r"/price_option/*": {"origins": "https://optionspricerapp.com"}})
+CORS(app, resources={r"/price_option/*": {
+    "origins": "https://optionspricerapp.com", 
+                                          "allow_headers": ["Content-Type", "Authorization"]}})
 num_sample_paths = 150
 
 
