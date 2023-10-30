@@ -4,11 +4,10 @@ from flask_cors import CORS, cross_origin
 import os
 
 app = Flask(__name__)
-allowed_origins = ['https://optionspricerapp.com', 'https://christianlindler.github.io/optionspricer']
+allowed_origins = ['https://optionspricerapp.com', 'https://christianlindler.github.io/optionspricer', '*']
 CORS(app, resources={r"/price_option/*": {
     "origins": '*'}})
 num_sample_paths = 150
-
 
 @app.after_request
 def after_request(response):
@@ -22,19 +21,17 @@ def everything_else():
     response = jsonify({'nothing': 'not much'})
     return response
 
-
 # When front end makes POST request, we price option
 @app.route('/price_option', methods=['POST'])
 def calculate_option_price():
-    # Get data
     data = request.get_json()
     call_or_put = data['callOrPut']
     ticker = data['ticker']
-    K = int(data['K'])
-    T = int(data['T'])
+    K = float(data['K'])
+    T = float(data['T'])
     num_sims = int(data['numSims'])
 
-    us_option_price, eu_option_price, paths, us_price_std, eu_price_std, payoff_std = price_option(call_or_put, ticker, K, T, num_sims)
+    us_option_price, eu_option_price, paths, us_price_std, eu_price_std, vol, dividends  = price_option(call_or_put, ticker, K, T, num_sims)
     response = jsonify(
         {
             'us_option_price': us_option_price,
@@ -42,7 +39,8 @@ def calculate_option_price():
             'paths': paths,
             'us_price_std': us_price_std,
             'eu_price_std': eu_price_std,
-            'payoff_std': payoff_std,
+            'vol': vol,
+            'dividends': dividends
         }
     )
     return response

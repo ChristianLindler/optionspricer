@@ -52,17 +52,20 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
 
     setCalculating(true)
     try {
-      const response = await fetch('https://optionspricer-369a3f4b4a0f.herokuapp.com/price_option', {
+      
+      const herokuURL = 'https://optionspricer-369a3f4b4a0f.herokuapp.com/price_option'
+      const response = await fetch('http://localhost:5000/price_option'
+      , {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          callOrPut: formData.get('callOrPut'),
-          ticker: formData.get('ticker'),
-          K: formData.get('strikePrice'),
-          T: formData.get('timeToExpiry'),
-          numSims: formData.get('numSims'),
+          callOrPut: callOrPut,
+          ticker: ticker,
+          K: K,
+          T: T,
+          numSims: numSims,
         }),
       })
 
@@ -76,6 +79,8 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
         usStdev: data.us_price_std,
         euStdev: data.eu_price_std,
         paths: data.paths,
+        vol: data.vol,
+        dividends: data.dividends,
         strikePrice: formData.get('strikePrice'),
       })
     } catch (error) {
@@ -118,7 +123,7 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
               label='Ticker'
               name='ticker'
               autoFocus
-              defaultValue={'GOOG'}
+              defaultValue={'MSFT'}
               InputLabelProps={{style: {fontFamily: theme.typography.fontFamily.primary, color: 'white'}}}
               InputProps={{style: {fontFamily: theme.typography.fontFamily.primary, color: 'white'}}}
             />
@@ -132,7 +137,7 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
               name='strikePrice'
               type='number'
               autoFocus
-              defaultValue={130}
+              defaultValue={300}
               InputLabelProps={{style: {fontFamily: theme.typography.fontFamily.primary, color: 'white'}}}
               InputProps={{style: {fontFamily: theme.typography.fontFamily.primary, color: 'white'}}}
             />
@@ -165,7 +170,7 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
               required
               fullWidth
               id='numSims'
-              label='Number of Simulations'
+              label='Number of Simulations (max 100,000)'
               name='numSims'
               type='number'
               autoFocus

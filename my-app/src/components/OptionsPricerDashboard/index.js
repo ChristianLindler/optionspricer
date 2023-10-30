@@ -55,7 +55,7 @@ const useStyles = makeStyles({
 
 const OptionsPricerDashboard = () => {
   const [optionData, setOptionData] = useState({paths: [0]})
-  const { paths, usPrice, euPrice, usStdev, euStdev, strikePrice } = optionData
+  const { paths, usPrice, euPrice, usStdev, euStdev, strikePrice, vol, dividends } = optionData
   const [alertOpen, setAlertOpen] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
   const [calculating, setCalculating] = useState(false)
@@ -94,10 +94,9 @@ const OptionsPricerDashboard = () => {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Paper className={classes.coloredPaper} elevation={10}>
-              <OptionsPriceDisplay name={'European Price'} price={euPrice} />
+              <OptionsPriceDisplay usPrice={usPrice} euPrice={euPrice} dividends={dividends} />
             </Paper>
           </Grid>
-
           <Grid item xs={12}>
             <Paper className={classes.paper} elevation={10}>
               <OptionPriceDistribution mean={usPrice} stdDev={euStdev} />

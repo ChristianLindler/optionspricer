@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Grid, makeStyles } from '@material-ui/core'
 import { theme } from '../../../theme'
 
@@ -8,6 +8,7 @@ const useStyles = makeStyles({
     height: '100%',
     borderRadius: '10px',
     display: 'inline-flex',
+
     padding: '10px'
   },
   primaryText: {
@@ -21,22 +22,53 @@ const useStyles = makeStyles({
   gridItem: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center', // Center horizontally
-    justifyContent: 'center', // Center vertically
-    textAlign: 'center',
+    align: 'left',
+    justifyContent: 'center',
+    textAlign: 'left',
   }
 })
 
-const OptionsPriceDisplay = ({ name, price }) => {
+const OptionsPriceDisplay = ({ usPrice, euPrice, dividends }) => {
   const classes = useStyles()
+  const [priceStrings, setPriceStrings] = useState([])
+
+  useEffect(() => {
+    let numDividends = 0;
+    let dividendPercentage = 0;
+    if (dividends !== undefined) {
+      for (let i = 0; i < dividends.length; i++) {
+        if (dividends[i] !== 0) {
+          numDividends++
+          dividendPercentage = 100 * parseFloat(dividends[i])
+        }
+      }
+    }
+
+
+    const euPriceStr = isNaN(euPrice) ? '' : '$' + Number(euPrice).toFixed(2)
+    let usPriceStr = isNaN(usPrice) ? '' : '$' + Number(usPrice).toFixed(2)
+    let dividendStr = `Assuming no dividend payments`
+    if (numDividends == 0) {
+      usPriceStr = euPriceStr
+    } else if (usPriceStr !== '') {
+      dividendStr = `Assuming ${numDividends} payments of ${dividendPercentage}% before expiry`
+    }
+    setPriceStrings([usPriceStr, euPriceStr, dividendStr])
+
+
+  }, [usPrice, euPrice, dividends])
+
   return (
     <div className='option-box'>
       <Grid container>
-        <Grid item xs={6} className={classes.gridItem}>
-          <h4 className={classes.secondaryText}>{name + ':'}</h4>
+        <Grid item xs={12} className={classes.gridItem}>
+          <h4 className={classes.secondaryText}>{'US Price:  ' + priceStrings[0]}</h4>
         </Grid>
-        <Grid item xs={6} className={classes.gridItem}>
-          <h2 className={classes.primaryText}>{isNaN(price) ? '' : '$' + Number(price).toFixed(2)}</h2>
+        <Grid item xs={12} className={classes.gridItem}>
+          <h4 className={classes.secondaryText}>{'EU Price:  ' + priceStrings[1]}</h4>
+        </Grid>
+        <Grid item xs={12} className={classes.gridItem}>
+          <p className={classes.secondaryText}>{priceStrings[2]}</p>
         </Grid>
       </Grid>
     </div>
