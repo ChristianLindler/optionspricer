@@ -44,7 +44,7 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
     const T = formData.get('timeToExpiry')
     const numSims = formData.get('numSims')
     
-    if (K < 0 || T < 0 || numSims < 2 || numSims > 100000) {
+    if (K < 0 || T <= 0 || numSims < 2 || numSims > 100000) {
       setAlertOpen(true)
       setAlertMessage('Check the values entered in the form')
       return
@@ -84,7 +84,7 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
       })
     } catch (error) {
       setAlertOpen(true)
-      setAlertMessage('Error Calculating Options Price.\n Only stocks with data available from YFinance can be used.')
+      setAlertMessage('Error Calculating Options Price. Only stocks with data available from YFinance can be used.')
       setOptionData({paths: [0]})
       console.error('Error calculating option price:', error)
     }
