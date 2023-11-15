@@ -6,9 +6,9 @@ Access the site at https://www.optionspricerapp.com/
 ![App Screenshot](images/app_pic.png)
 
 ## Usage
-The user interface is very intuitive. In the top left of the application there is a form where users first enter a stock ticker they would like to price an option on. YFinance is used to collect stock data, so only options can only be priced on stocks who's data is available through YFinance.
-Other parameters (Strike price, time-to-expiry, number of simulations) are selected in the same form. When the parameters are selected, the "Calculate" button is used to begin calculating Options Price.
-Upon calculation, the application visualizes 100 of the user's simulated paths, the standard error for American Prices, and a distrubution of the returns on the final day.
+The user interface is very intuitive. By using YFinance to collect stock data, the application automatically collects information like current price, volatility, or dividend history, without requiring user input. Because of this, options can only be priced on stocks who's data is available through YFinance.
+In the top left of the application there is a form where users first enter a stock ticker they would like to price an option on. Other parameters (Strike price, time-to-expiry, number of simulations) are selected in the same form. When the parameters are selected, the "Calculate" button is used to begin calculating Options Price.
+Upon calculation, the application visualizes a sample of 100 of the user's simulated paths, the standard error for American Prices, and a distribution of the returns on the final day.
 
 ## Built With
 * <a href="https://reactjs.org/"><img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" width="100"></a>
