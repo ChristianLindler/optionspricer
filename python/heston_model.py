@@ -62,7 +62,7 @@ def generate_paths(num_sims, S0, mu, sigma, T, kappa, vol_of_vol, theta, rho, di
     vol_of_vol: volatility of volatility
     theta: long term mean of variance
     rho: correlation for brownian motions
-    dividend_days ([]): ith element is 1/100 * percentage dividend on ith day
+    dividend_days ([]): ith element is dividend on ith day
     Returns: time_points, paths
     '''
 
@@ -79,16 +79,21 @@ def generate_paths(num_sims, S0, mu, sigma, T, kappa, vol_of_vol, theta, rho, di
     asset_brownian_motion, vol_brownian_motion = generate_correlated_brownians(
         dt, (num_sims, num_steps - 1), float(rho))
     
+    print(f'Generating {num_sims} paths')
     for t in tqdm.trange(1, num_steps):
         current_prices = paths[:, t - 1]
         # The GBM Formula says dS(t) = mu*S*dt + sigma*S(t)*dW(t)
         change_in_price = mu * current_prices * dt  + current_vol * current_prices * asset_brownian_motion[:, t - 1]
-        paths[:, t] = (current_prices + change_in_price) * (1 - dividend_days[t - 1])
+        
+        paths[:, t] = (current_prices + change_in_price) - dividend_days[t - 1]
 
         # The Heston model says dV(t) = k(theta - V)dt + vol_of_vol*V*dW(t)
         change_in_vol = kappa * (theta - current_vol ** 2) \
             * dt + vol_of_vol * current_vol * vol_brownian_motion[:, t - 1]
         current_vol += change_in_vol
+
+        if dividend_days[t - 1] != 0:
+            print(f'${dividend_days[t-1]} Dividend paid on {t}th day')
 
     return time_points, paths
 

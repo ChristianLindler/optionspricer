@@ -43,5 +43,7 @@ def price_european_option(call_or_put, paths, K, r, T):
     # Discount payoffs to present value using risk free interest rate
     discounted_payoffs = payoffs * np.exp(-r * T)
     mean_payoff = np.mean(discounted_payoffs)
-    payoff_sample_std = np.std(discounted_payoffs, ddof=1)
-    return mean_payoff, payoff_sample_std
+    
+    std_dev = np.std(discounted_payoffs, ddof=1)
+    se = std_dev / np.sqrt(len(discounted_payoffs))
+    return mean_payoff, se

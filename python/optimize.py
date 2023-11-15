@@ -1,12 +1,10 @@
 from datetime import datetime
-from options import get_implied_vol, price_european_option, longstaff_schwartz, get_tickers
-from monte_carlo import generate_paths
+from utils import get_implied_vol, price_european_option, longstaff_schwartz, get_tickers
+from heston_model import generate_paths
 from black_scholes import black_scholes
 from scipy.optimize import minimize, basinhopping
 import numpy as np
 import yfinance as yf
-
-NUM_STEPS = 100
 
 def expiration_to_T(expiration_date_str):
     expiration_date = datetime.strptime(expiration_date_str, '%Y-%m-%d').date()
@@ -33,10 +31,9 @@ def price_option(call_or_put, ticker, K, T, n, params):
     volatility = get_implied_vol(ticker)
     r = 0.041 # risk free interest rate
     # kappa = 5 # variance reversion rate
-    dt = T/NUM_STEPS
 
     # Drift set to risk free interest rate (risk neutral pricing)
-    time_points, heston_paths = generate_paths(n, K, r, volatility, NUM_STEPS, T, kappa, vol_of_vol, theta, rho)
+    time_points, heston_paths = generate_paths(n, K, r, volatility, T, kappa, vol_of_vol, theta, rho)
     eu_heston_price, heston_price_std, heston_payoff_std = price_european_option(call_or_put, heston_paths, K, r, T)
     us_heston_price = longstaff_schwartz(heston_paths, K, r, T, call_or_put)
     #heston_price = gpt_longstaff_schwartz(heston_paths, call_or_put, K, r, T)

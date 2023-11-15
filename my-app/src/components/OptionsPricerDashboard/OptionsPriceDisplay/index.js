@@ -34,24 +34,23 @@ const OptionsPriceDisplay = ({ usPrice, euPrice, dividends }) => {
 
   useEffect(() => {
     let numDividends = 0;
-    let dividendPercentage = 0;
+    let dividendPayment = 0;
     if (dividends !== undefined) {
       for (let i = 0; i < dividends.length; i++) {
         if (dividends[i] !== 0) {
           numDividends++
-          dividendPercentage = 100 * parseFloat(dividends[i])
+          dividendPayment = parseFloat(dividends[i]).toFixed(2)
         }
       }
     }
 
-
     const euPriceStr = isNaN(euPrice) ? '' : '$' + Number(euPrice).toFixed(2)
     let usPriceStr = isNaN(usPrice) ? '' : '$' + Number(usPrice).toFixed(2)
-    let dividendStr = `Assuming no dividend payments`
+    let dividendStr = `Assuming no dividend payments before expiry`
     if (numDividends == 0) {
       usPriceStr = euPriceStr
     } else if (usPriceStr !== '') {
-      dividendStr = `Assuming ${numDividends} payments of ${dividendPercentage}% before expiry`
+      dividendStr = `Assuming ${numDividends} dividend payments of $${dividendPayment} before expiry`
     }
     setPriceStrings([usPriceStr, euPriceStr, dividendStr])
 

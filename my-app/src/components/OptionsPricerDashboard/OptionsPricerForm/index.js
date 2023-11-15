@@ -123,7 +123,7 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
               label='Ticker'
               name='ticker'
               autoFocus
-              defaultValue={'MSFT'}
+              defaultValue={'VZ'}
               InputLabelProps={{style: {fontFamily: theme.typography.fontFamily.primary, color: 'white'}}}
               InputProps={{style: {fontFamily: theme.typography.fontFamily.primary, color: 'white'}}}
             />
@@ -137,7 +137,7 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
               name='strikePrice'
               type='number'
               autoFocus
-              defaultValue={300}
+              defaultValue={30}
               InputLabelProps={{style: {fontFamily: theme.typography.fontFamily.primary, color: 'white'}}}
               InputProps={{style: {fontFamily: theme.typography.fontFamily.primary, color: 'white'}}}
             />
@@ -174,7 +174,7 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
               name='numSims'
               type='number'
               autoFocus
-              defaultValue={5000}
+              defaultValue={50000}
               InputLabelProps={{style: {fontFamily: theme.typography.fontFamily.primary, color: 'white'}}}
               InputProps={{style: {fontFamily: theme.typography.fontFamily.primary, color: 'white'}}}
             />

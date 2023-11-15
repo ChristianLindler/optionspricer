@@ -1,4 +1,6 @@
 import numpy as np
+import tqdm
+import matplotlib.pyplot as plt
 
 # https://www.youtube.com/watch?v=--Il6rgtVjM
 # https://people.math.ethz.ch/~hjfurrer/teaching/LongstaffSchwartzAmericanOptionsLeastSquareMonteCarlo.pdf
@@ -25,16 +27,17 @@ def longstaff_schwartz(S, K, r, T, option_type='call', dividend_present_val=[]):
         exercise_value = np.maximum(K - S, 0) # Intrinsic values for put option
     elif option_type == 'call':
         exercise_value = S - K # Intrinsic values for call option
-        dividend_value = S @ np.diag(dividend_present_val)
-        exercise_value += dividend_value
+        exercise_value += [dividend_present_val] * len(S)
         exercise_value = np.maximum(exercise_value, 0)
+        
     else:
         raise ValueError("Invalid option_type. Use 'put' or 'call'.")
 
     cashflow = np.zeros_like(exercise_value)
     cashflow[:, -1] = exercise_value[:, -1] # No continuation value on final day, it equals exercise value
 
-    for t in range(num_steps - 2, -1, -1):
+    print(f'Pricing American Option on {num_sims} paths')
+    for t in tqdm.trange(num_steps - 2, -1, -1):
         itm = exercise_value[:, t] > 0 # Matrix set to true where price is in the money
         
         if np.count_nonzero(itm) > 0:
@@ -54,7 +57,7 @@ def longstaff_schwartz(S, K, r, T, option_type='call', dividend_present_val=[]):
 
     # Expectation of the initial discounted cashflow
     option_price = np.mean(cashflow[:, 0])
-    price_std = np.std(cashflow[:, 0], ddof=1)
-
-    return option_price, price_std
+    std_dev = np.std(cashflow[:, 0])
+    se = std_dev / np.sqrt(len(cashflow[:, 0]))
+    return option_price, se
 
