@@ -1,30 +1,35 @@
 ## Options Pricing Overview
+A full stack application that utilizes the Heston Model and Longstaff Schwartz approach to price American and European Options
 
-https://www.optionspricerapp.com/
+Access the site at https://www.optionspricerapp.com/
 
-### `options.py`
+![App Screenshot](images/app_pic.png)
 
-#### 1. **European Options Pricing:**
-   - The `price_european_option` function calculates the price of European call or put options using the final prices of simulated asset paths. It computes the discounted payoff of the option, considering the strike price, risk-free interest rate, and time until expiry.
-   - The function supports pricing for both call and put options, providing the mean payoff, mean payoff sample standard deviation, and payoff sample standard deviation.
+## Usage
+The user interface is very intuitive. In the top left of the application there is a form where users first enter a stock ticker they would like to price an option on. YFinance is used to collect stock data, so only options can only be priced on stocks who's data is available through YFinance.
+Other parameters (Strike price, time-to-expiry, number of simulations) are selected in the same form. When the parameters are selected, the "Calculate" button is used to begin calculating Options Price.
+Upon calculation, the application visualizes 100 of the user's simulated paths, the standard error for American Prices, and a distrubution of the returns on the final day.
 
-#### 2. **American Options Pricing - Longstaff Schwartz Method:**
-   - The `longstaff_schwartz` function implements the Longstaff-Schwartz method for pricing American options. It supports both call and put options.
-   - The function iteratively computes the option price, considering whether it's optimal to exercise the option at each time step. It uses polynomial regression to estimate the continuation value at each step, deciding whether to exercise based on a comparison between the exercise and continuation values.
+## Built With
+* <a href="https://reactjs.org/"><img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" width="100"></a>
+* <a href="https://flask.palletsprojects.com/en/3.0.x/"><img src="https://flask.palletsprojects.com/en/3.0.x/_images/flask-horizontal.png" alt="Flask" width="100"></a>
 
-### `options_pricer.py`
-
-- The `price_option` function in `options_pricer.py` is a comprehensive function for pricing options. It retrieves the initial stock price and implied volatility, then uses these values, along with user-specified parameters, to generate asset paths using the Heston model.
-- The function then prices European and American options using the `price_european_option` and `longstaff_schwartz` functions from `options.py`. It returns the prices of both types of options along with their standard deviations and the generated asset paths.
-
-#### Parameters:
-- `call_or_put`: Specifies whether the option is a call or put.
-- `ticker`: The stock ticker.
-- `K`: The strike price.
-- `T`: Time to expiry.
-- `n`: Number of simulations.
-
-### Supporting Modules:
-- The repository also contains supporting modules like `black_scholes.py` for Black-Scholes pricing, `monte_carlo.py` for generating asset paths using the Heston model, and `brownian_motion.py` for generating correlated Brownian motions, which are integral to the options pricing process.
-
-For a deeper understanding, users are encouraged to review the code and comments within each function in the respective files.
+## Credits
+<ul>
+   <li>
+      <b>Christian Lindler</b>
+      <a href="www.linkedin.com/in/christianlindler"><img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png" alt="Linkedin" width="30"></a>
+      <a href="https://github.com/ChristianLindler"><img src="https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" alt="GitHub" width="30"></a>
+      <a href="mailto:ChristianWLindler@gmail.com"><img src="https://static.vecteezy.com/system/resources/previews/016/716/465/non_2x/gmail-icon-free-png.png" alt="Email" width="30"></a>
+   </li>
+   <li>
+      <b>
+         Ben DiPrete
+      </b>
+   </li>
+   <li>
+      <b>
+         Cole Miller
+      </b>
+   </li>
+</ul>
