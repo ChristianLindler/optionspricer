@@ -52,7 +52,6 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
 
     setCalculating(true)
     try {
-      
       const herokuURL = 'https://optionspricer-369a3f4b4a0f.herokuapp.com/price_option'
       const response = await fetch('http://localhost:5000/price_option'
       , {
@@ -84,6 +83,9 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
         strikePrice: formData.get('strikePrice'),
       })
     } catch (error) {
+      setAlertOpen(true)
+      setAlertMessage('Error Calculating Options Price.\n Only stocks with data available from YFinance can be used.')
+      setOptionData({paths: [0]})
       console.error('Error calculating option price:', error)
     }
     setCalculating(false)
