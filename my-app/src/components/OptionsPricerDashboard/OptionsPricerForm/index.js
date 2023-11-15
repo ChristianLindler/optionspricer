@@ -176,7 +176,7 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
               name='numSims'
               type='number'
               autoFocus
-              defaultValue={50000}
+              defaultValue={5000}
               InputLabelProps={{style: {fontFamily: theme.typography.fontFamily.primary, color: 'white'}}}
               InputProps={{style: {fontFamily: theme.typography.fontFamily.primary, color: 'white'}}}
             />
