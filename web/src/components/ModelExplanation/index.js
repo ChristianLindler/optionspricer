@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Grid, Paper, makeStyles } from '@material-ui/core'
 import { theme } from '../../theme'
 import explanationText from './explanationText'

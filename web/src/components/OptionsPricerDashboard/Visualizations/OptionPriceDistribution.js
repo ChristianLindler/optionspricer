@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import Chart from 'chart.js/auto'
 import ChartAnnotationsPlugin from 'chartjs-plugin-annotation'
 import { theme } from '../../../theme'
@@ -33,7 +33,6 @@ const OptionPriceDistribution = ({ mean, stdDev }) => {
         datasets: [
           {
             data: pdfValues,
-            borderWidth: 1,
             backgroundColor: theme.palette.lighterSecondary,
             fill: true,
             borderColor: theme.palette.secondary,

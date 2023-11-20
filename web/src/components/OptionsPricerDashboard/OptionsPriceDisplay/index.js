@@ -47,7 +47,7 @@ const OptionsPriceDisplay = ({ usPrice, euPrice, dividends }) => {
     const euPriceStr = isNaN(euPrice) ? '' : '$' + Number(euPrice).toFixed(2)
     let usPriceStr = isNaN(usPrice) ? '' : '$' + Number(usPrice).toFixed(2)
     let dividendStr = `Assuming no dividend payments before expiry`
-    if (numDividends == 0) {
+    if (numDividends === 0) {
       usPriceStr = euPriceStr
     } else if (usPriceStr !== '') {
       dividendStr = `Assuming ${numDividends} dividend payments of $${dividendPayment} before expiry`
