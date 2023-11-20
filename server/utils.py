@@ -1,6 +1,4 @@
-from bs4 import BeautifulSoup
 import numpy as np
-import requests
 import yfinance as yf
 from datetime import datetime
 from pytz import utc
@@ -71,23 +69,6 @@ def get_dividend_present_val(dividend_days, T, r):
     
     return np.array(discounted_payment)
 
-# https://github.com/jknaudt21/Option-Scraper-BlackScholes/blob/master/Option%20Scraper.ipynb
-def get_tickers():
-    """Returns the tickers for all the S&P500 companies using the Wikipedia page
-    Outputs: 
-        tickers - list of tickers for every company in the S&P500
-    """
-    url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-    page = requests.get(url)
-    soup = BeautifulSoup(page.content, 'html.parser')
-    table = soup.find("table") # tickers are contained in a table
-    tickers = []
-    for row in table.find_all('tr'):
-            cols = row.find_all('td')
-            if cols:
-                tickers.append(cols[0].text.strip())
-    return tickers
-
 def get_historical_volatility(ticker, num_days):
     '''
     ticker: Stock ticker
@@ -98,19 +79,3 @@ def get_historical_volatility(ticker, num_days):
     stock_data = stock_data.sort_values(by='Date', ascending=False).head(num_days)
     stock_data['Daily_Returns'] = stock_data['Adj Close'].pct_change()
     return np.std(stock_data['Daily_Returns']) * np.sqrt(252)
-
-# https://github.com/jknaudt21/Option-Scraper-BlackScholes/blob/master/Option%20Scraper.ipynb
-def get_implied_vol(ticker):
-    """Returns a stock's 30-day implied volatility from alphaqueries
-    Inputs:
-        ticker     - a string representing a stock's ticker
-    Outputs: 
-        volatility - implied volatility for the stock 
-    """
-    url = "https://www.alphaquery.com/stock/"+ ticker+ "/volatility-option-statistics/30-day/iv-mean"
-    page = requests.get(url)
-    soup = BeautifulSoup(page.content, 'html.parser')
-    table = soup.find("table")
-    rows = table.find_all('tr') 
-    volatility = float(rows[5].find_all('td')[1].text.strip())
-    return volatility
