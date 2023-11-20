@@ -15,13 +15,9 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
     return response
 
-@app.route('/price_option', methods=['GET', 'OPTIONS'])
+@app.route('/', methods=['OPTIONS'])
 def everything_else():
-    if request.method == 'OPTIONS':
-        return make_response(), 200
-    else:
-        response = jsonify({'nothing': 'not much'})
-        return response
+    return make_response(), 200
 
 # When front end makes POST request, we price option
 @app.route('/price_option', methods=['POST'])
