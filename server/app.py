@@ -1,12 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from options_pricer import price_option
 from flask_cors import CORS, cross_origin
 import os
 
 app = Flask(__name__)
-allowed_origins = ['https://optionspricerapp.com', 'https://christianlindler.github.io/optionspricer', '*']
-CORS(app, resources={r"/price_option/*": {
-    "origins": '*'}})
+allowed_origins = ['https://optionspricerapp.com', 'https://christianlindler.github.io/optionspricer']
+CORS(app, resources={r"/price_option/*": {"origins": allowed_origins}})
 num_sample_paths = 150
 
 @app.after_request
@@ -18,8 +17,11 @@ def after_request(response):
 
 @app.route('/price_option', methods=['GET', 'OPTIONS'])
 def everything_else():
-    response = jsonify({'nothing': 'not much'})
-    return response
+    if request.method == 'OPTIONS':
+        return make_response(), 200
+    else:
+        response = jsonify({'nothing': 'not much'})
+        return response
 
 # When front end makes POST request, we price option
 @app.route('/price_option', methods=['POST'])
