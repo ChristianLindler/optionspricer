@@ -15,7 +15,7 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
     return response
 
-@app.route('/', methods=['OPTIONS'])
+@app.route('/price_option', methods=['OPTIONS'])
 def everything_else():
     return make_response(), 200
 

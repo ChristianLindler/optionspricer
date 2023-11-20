@@ -52,7 +52,7 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
 
     setCalculating(true)
     try {
-      const herokuURL = 'https://optionspricerapp-edb45e3d36e0.herokuapp.com/'
+      const herokuURL = 'https://optionspricerapp-edb45e3d36e0.herokuapp.com/price_option'
       const response = await fetch(herokuURL
       , {
         method: 'POST',
