@@ -18,7 +18,7 @@ Upon calculation, the application visualizes a sample of 100 of the user's simul
 <ul>
    <li>
       <b>Christian Lindler</b>
-      <a href="www.linkedin.com/in/christianlindler"><img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png" alt="Linkedin" width="30"></a>
+      <a href="https://www.linkedin.com/in/christianlindler"><img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png" alt="Linkedin" width="30"></a>
       <a href="https://github.com/ChristianLindler"><img src="https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" alt="GitHub" width="30"></a>
       <a href="mailto:ChristianWLindler@gmail.com"><img src="https://static.vecteezy.com/system/resources/previews/016/716/465/non_2x/gmail-icon-free-png.png" alt="Email" width="30"></a>
    </li>
