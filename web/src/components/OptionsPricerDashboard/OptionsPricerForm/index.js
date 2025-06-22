@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Grid,
   TextField,
@@ -43,6 +43,7 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
   const classes = useStyles()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const [isFirstRequest, setIsFirstRequest] = useState(true)
 
   const calculateOptionPrice = async (event) => {
     event.preventDefault()
@@ -53,9 +54,6 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
     const K = parseFloat(formData.get('strikePrice'))
     const daysToExpiry = parseInt(formData.get('timeToExpiry'))
     const numSims = parseInt(formData.get('numSims'))
-    
-    // Convert days to years for backend
-    const T = daysToExpiry / 365.0
     
     // Validation with new limits
     if (K <= 0 || daysToExpiry <= 0 || daysToExpiry > 365 || numSims < 100 || numSims > 10000) {
@@ -72,6 +70,18 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
     }
 
     setCalculating(true)
+    
+    const timeoutDuration = 5000
+    let timeoutId = null
+    
+    if (isFirstRequest) {
+      timeoutId = setTimeout(() => {
+        setAlertOpen(true)
+        setAlertMessage('First request may take up to 30 seconds for a server to spin up, but subsequent requests will be much faster.')
+        setIsFirstRequest(false)
+      }, timeoutDuration)
+    }
+    
     try {
       // Use localhost for local development, fallback to production URL
       const apiURL = process.env.NODE_ENV === 'development' 
@@ -84,11 +94,11 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          callOrPut: callOrPut,
+          option_type: callOrPut,
           ticker: ticker.toUpperCase(),
-          K: K,
-          T: T,  // Converted to years
-          numSims: numSims,
+          strike_price: K,
+          time_to_expiry: daysToExpiry,
+          num_simulations: numSims,
         }),
       })
 
@@ -96,6 +106,11 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
+      
+      // Clear timeout if request completed successfully
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
       
       // Validate the response data structure
       if (!data || typeof data !== 'object') {
@@ -128,6 +143,11 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
         strikePrice: K,
       })
     } catch (error) {
+      // Clear timeout if request failed
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+      
       setAlertOpen(true)
       setAlertMessage(`Error Calculating Options Price: ${error.message}. Please ensure you entered a valid Fortune 500 company ticker symbol.`)
       setOptionData({paths: [[0]]}) // Set a safe default

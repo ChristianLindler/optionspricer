@@ -7,6 +7,14 @@ Starts the options pricing API server with debug mode enabled.
 import os
 import sys
 
+# Load environment variables from .env file FIRST, before any other imports
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # python-dotenv not installed, that's fine for production
+    pass
+
 # Add the backend directory to the Python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,5 +33,5 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print("\n👋 Server stopped by user")
     except Exception as e:
-        print(f"❌ Server error: {e}")
+        print(f"\n❌ Server error: {e}")
         sys.exit(1) 

@@ -9,14 +9,6 @@ from data.cache import get_api_usage_stats
 from flask_cors import CORS
 import os
 
-# Try to load .env file for local development, but don't fail if it doesn't exist
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    # python-dotenv not installed, that's fine for production
-    pass
-
 app = Flask(__name__)
 
 # CORS configuration
@@ -43,10 +35,19 @@ def calculate_option_price():
     """
     Calculate option prices using Monte Carlo simulation.
     
-    Expected JSON payload:
+    Expected JSON payload (new field names):
+    {
+        "option_type": "call" | "put",
+        "ticker": "AAPL",
+        "strike_price": 150.0,
+        "time_to_expiry": 30,
+        "num_simulations": 1000
+    }
+    
+    Legacy field names also supported:
     {
         "callOrPut": "call" | "put",
-        "ticker": "AAPL",
+        "ticker": "AAPL", 
         "K": 150.0,
         "T": 0.25,
         "numSims": 1000
@@ -58,24 +59,31 @@ def calculate_option_price():
     try:
         data = request.get_json()
         
-        # Validate required fields
-        required_fields = ['callOrPut', 'ticker', 'K', 'T', 'numSims']
-        for field in required_fields:
-            if field not in data:
-                return jsonify({'error': f'Missing required field: {field}'}), 400
+        # Support both new and legacy field names
+        call_or_put = data.get('option_type', data.get('callOrPut', '')).lower()
+        ticker = data.get('ticker', '').upper().strip()
+        strike_price = float(data.get('strike_price', data.get('K', 0)))
+        time_to_expiry_days = float(data.get('time_to_expiry', data.get('T', 0)))
+        num_simulations = int(data.get('num_simulations', data.get('numSims', 0)))
         
-        # Extract and validate parameters
-        call_or_put = data['callOrPut'].lower()
-        ticker = data['ticker'].upper().strip()
-        strike_price = float(data['K'])
-        time_to_expiry = float(data['T'])
-        num_simulations = int(data['numSims'])
+        # Convert days to years for the simulation (if needed)
+        time_to_expiry_years = time_to_expiry_days / 365.0
+        
+        # Validate required fields
+        if not call_or_put:
+            return jsonify({'error': 'Missing required field: option_type or callOrPut'}), 400
+        if not ticker:
+            return jsonify({'error': 'Missing required field: ticker'}), 400
+        if strike_price <= 0:
+            return jsonify({'error': 'Missing or invalid required field: strike_price or K'}), 400
+        if time_to_expiry_days <= 0:
+            return jsonify({'error': 'Missing or invalid required field: time_to_expiry or T'}), 400
+        if num_simulations <= 0:
+            return jsonify({'error': 'Missing or invalid required field: num_simulations or numSims'}), 400
         
         # Validate input values
-        if strike_price <= 0:
-            return jsonify({'error': 'Strike price must be positive'}), 400
-        if time_to_expiry <= 0 or time_to_expiry > 1.0:  # Max 1 year (365 days)
-            return jsonify({'error': 'Time to expiry must be between 0 and 1 year'}), 400
+        if time_to_expiry_days > 365:  # Max 1 year (365 days)
+            return jsonify({'error': 'Time to expiry must be between 0 and 365 days'}), 400
         if num_simulations < 100 or num_simulations > 10000:  # Reduced limits for deployment
             return jsonify({'error': 'Number of simulations must be between 100 and 10,000'}), 400
         if call_or_put not in ['call', 'put']:
@@ -83,7 +91,7 @@ def calculate_option_price():
         
         # Price the option
         american_price, european_price, american_se, european_se, paths, volatility, dividends = price_option(
-            call_or_put, ticker, strike_price, time_to_expiry, num_simulations
+            call_or_put, ticker, strike_price, time_to_expiry_years, num_simulations
         )
         
         # Get API usage statistics
@@ -98,7 +106,7 @@ def calculate_option_price():
             if hasattr(sampled_paths, 'tolist'):
                 sampled_paths = sampled_paths.tolist()
             else:
-                sampled_paths = [p.tolist() if hasattr(p, 'tolist') else list(p) for p in sampled_paths]
+                sampled_paths = [list(p) for p in sampled_paths]
         
         response = jsonify({
             'us_option_price': american_price,
@@ -110,8 +118,8 @@ def calculate_option_price():
             'dividends': dividends,
             'api_usage': api_stats,
             'ticker': ticker,
-            'strike': strike_price,
-            'time_to_expiry': time_to_expiry,
+            'strike_price': strike_price,
+            'time_to_expiry': time_to_expiry_days,
             'option_type': call_or_put,
             'total_paths': len(paths) if hasattr(paths, '__len__') else 0,
             'sampled_paths': len(sampled_paths)

@@ -8,7 +8,7 @@ Access the site at https://www.optionspricerapp.com/
 ## Setup & Deployment
 
 ### Prerequisites
-- Python 3.8+
+- Python 3.11
 - Node.js (for frontend)
 - API keys from:
   - [Alpha Vantage](https://www.alphavantage.co/support/#api-key) (for dividend data)
