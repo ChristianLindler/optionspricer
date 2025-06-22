@@ -1,8 +1,8 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core'
+import { makeStyles, useMediaQuery, useTheme } from '@material-ui/core'
 import { theme as customTheme } from '../../../theme'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   container: {
     position: 'relative',
     width: '100%',
@@ -10,6 +10,9 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      height: '280px',
+    },
   },
   shortContainer: {
     position: 'relative',
@@ -18,6 +21,9 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      height: '160px',
+    },
   },
   noDataContainer: {
     display: 'flex',
@@ -30,11 +36,19 @@ const useStyles = makeStyles({
     fontSize: customTheme.charts.fontSize.medium,
     textAlign: 'center',
     padding: '20px',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: customTheme.charts.fontSize.small,
+      padding: '12px',
+    },
   },
   noDataIcon: {
     fontSize: '48px',
     marginBottom: '12px',
     opacity: 0.5,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '36px',
+      marginBottom: '8px',
+    },
   },
   noDataText: {
     margin: '0',
@@ -44,7 +58,7 @@ const useStyles = makeStyles({
     width: '100% !important',
     height: '100% !important',
   },
-})
+}))
 
 const ChartContainer = ({ children, hasData, title, subtitle, short = false }) => {
   const classes = useStyles()

@@ -9,6 +9,8 @@ import {
   Radio,
   FormControlLabel,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@material-ui/core'
 import { theme as customTheme } from '../../../theme'
 import { uniqueSupportedTickers } from '../../../data/supportedTickers'
@@ -28,11 +30,19 @@ const useStyles = makeStyles({
   secondaryText: {
     color: 'white',
     fontFamily: customTheme.typography.fontFamily.primary,
+  },
+  mobileForm: {
+    padding: '8px',
+  },
+  mobileGrid: {
+    flexDirection: 'column',
   }
 })
 
 const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calculating, setCalculating }) => {
   const classes = useStyles()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const calculateOptionPrice = async (event) => {
     event.preventDefault()
@@ -66,7 +76,7 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
       // Use localhost for local development, fallback to production URL
       const apiURL = process.env.NODE_ENV === 'development' 
         ? 'http://localhost:5000/price_option'
-        : 'https://optionspricerapp-edb45e3d36e0.herokuapp.com/price_option'
+        : 'https://optionspricer.onrender.com/price_option'
       
       const response = await fetch(apiURL, {
         method: 'POST',
@@ -127,9 +137,9 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
   }
 
   return (
-    <Container component='form' onSubmit={calculateOptionPrice}>
-      <Grid container>
-        <Grid item xs={6}>
+    <Container component='form' onSubmit={calculateOptionPrice} className={isMobile ? classes.mobileForm : ''}>
+      <Grid container className={isMobile ? classes.mobileGrid : ''}>
+        <Grid item xs={isMobile ? 12 : 6}>
           <Grid container direction='column'>
             <RadioGroup name='callOrPut' defaultValue='call'>
               <Grid container>
@@ -176,7 +186,7 @@ const OptionsPricerForm = ({ setOptionData, setAlertOpen, setAlertMessage, calcu
             />
           </Grid>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={isMobile ? 12 : 6}>
           <Grid container direction='column'>
             <TextField
               margin='normal'

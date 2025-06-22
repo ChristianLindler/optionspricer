@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Grid, makeStyles } from '@material-ui/core'
+import { Grid, makeStyles, useMediaQuery, useTheme } from '@material-ui/core'
 import { theme } from '../../../theme'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   container: {
     width: '100%',
     height: '100%',
@@ -25,6 +25,10 @@ const useStyles = makeStyles({
     fontWeight: 600,
     margin: '8px 0',
     lineHeight: 1.2,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '16px',
+      margin: '6px 0',
+    },
   },
   priceValue: {
     color: 'white',
@@ -32,6 +36,10 @@ const useStyles = makeStyles({
     fontSize: '24px',
     fontWeight: 700,
     marginLeft: '8px',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '20px',
+      marginLeft: '6px',
+    },
   },
   dividendText: {
     color: 'white',
@@ -39,6 +47,10 @@ const useStyles = makeStyles({
     fontSize: '14px',
     marginTop: '12px',
     opacity: 0.9,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '12px',
+      marginTop: '8px',
+    },
   },
   gridItem: {
     display: 'flex',
@@ -46,8 +58,22 @@ const useStyles = makeStyles({
     align: 'left',
     justifyContent: 'center',
     textAlign: 'left',
+  },
+  priceRow: {
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+    },
+  },
+  mobilePriceValue: {
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: '0',
+      marginTop: '2px',
+    },
   }
-})
+}))
 
 const OptionsPriceDisplay = ({ usPrice, euPrice, dividends }) => {
   const classes = useStyles()
@@ -107,15 +133,15 @@ const OptionsPriceDisplay = ({ usPrice, euPrice, dividends }) => {
     <div className='option-box'>
       <Grid container>
         <Grid item xs={12} className={classes.gridItem}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div className={classes.priceRow}>
             <span className={classes.priceLabel}>US Price:</span>
-            <span className={classes.priceValue}>{priceStrings[0]}</span>
+            <span className={`${classes.priceValue} ${classes.mobilePriceValue}`}>{priceStrings[0]}</span>
           </div>
         </Grid>
         <Grid item xs={12} className={classes.gridItem}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div className={classes.priceRow}>
             <span className={classes.priceLabel}>EU Price:</span>
-            <span className={classes.priceValue}>{priceStrings[1]}</span>
+            <span className={`${classes.priceValue} ${classes.mobilePriceValue}`}>{priceStrings[1]}</span>
           </div>
         </Grid>
         <Grid item xs={12} className={classes.gridItem}>

@@ -27,7 +27,7 @@ const OptionPriceDistribution = ({ mean, stdDev }) => {
     const xValues = []
     const pdfValues = []
     for (let x = mean - 3 * stdDev; x <= mean + 3 * stdDev; x += stdDev/20) {
-      xValues.push(x.toFixed(2))
+      xValues.push(x.toFixed(1))
       pdfValues.push(
         calculateNormalDistributionPDF(x, mean, stdDev)
       )

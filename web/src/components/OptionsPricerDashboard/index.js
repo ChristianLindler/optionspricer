@@ -49,6 +49,10 @@ const useStyles = makeStyles((theme) => ({
     transform: 'translateX(-50%)',
     width: '40%',
     zIndex: 9999,
+    [theme.breakpoints.down('sm')]: {
+      width: '90%',
+      bottom: '10px',
+    },
   },
   progressContainer: {
     display: 'flex',
@@ -65,6 +69,8 @@ const OptionsPricerDashboard = () => {
   const [alertMessage, setAlertMessage] = useState('')
   const [calculating, setCalculating] = useState(false)
   const classes = useStyles()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
 
   return (
     <Grid container justifyContent='center' className={classes.container} spacing={3}>
@@ -75,7 +81,7 @@ const OptionsPricerDashboard = () => {
           </Alert>
         </div>
       )}
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} lg={8}>
         <Paper className={classes.paper} elevation={10}>
           <div className={classes.flexContent}>
             <OptionsPricerForm
@@ -89,13 +95,13 @@ const OptionsPricerDashboard = () => {
         </Paper>
       </Grid>
 
-      <Grid item xs={6} md={4}>
+      <Grid item xs={12} sm={6} lg={4}>
         <Paper className={classes.paper} elevation={10}>
           <StockPriceDistribution paths={paths} strikePrice={strikePrice} numBins={30}/>
         </Paper>
       </Grid>
 
-      <Grid item xs={6} md={4}>
+      <Grid item xs={12} sm={6} lg={4}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Paper className={classes.coloredPaper} elevation={10}>
@@ -110,7 +116,7 @@ const OptionsPricerDashboard = () => {
         </Grid>
       </Grid>
 
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} lg={8}>
         <Paper className={classes.paper} elevation={10}>
           {calculating ?
             <div className={classes.progressContainer}>
