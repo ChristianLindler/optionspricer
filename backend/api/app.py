@@ -18,7 +18,10 @@ ALLOWED_ORIGINS = [
     'http://localhost:3000',  # React dev server
     'http://127.0.0.1:3000'   # Alternative localhost
 ]
-CORS(app, resources={r"/price_option/*": {"origins": ALLOWED_ORIGINS}})
+CORS(app, resources={
+    r"/price_option": {"origins": ALLOWED_ORIGINS},
+    r"/price_option/*": {"origins": ALLOWED_ORIGINS}
+})
 
 # Configuration
 MAX_SAMPLE_PATHS = 150  # Limit paths sent to frontend for performance
@@ -28,6 +31,17 @@ MAX_SAMPLE_PATHS = 150  # Limit paths sent to frontend for performance
 def handle_options():
     """Handle preflight OPTIONS requests."""
     return make_response(), 200
+
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    """Simple health check endpoint."""
+    print("🏥 Health check request received")
+    return jsonify({
+        'status': 'healthy',
+        'message': 'Options pricer API is running',
+        'timestamp': '2024-01-01T00:00:00Z'
+    })
 
 
 @app.route('/price_option', methods=['POST'])
@@ -56,8 +70,12 @@ def calculate_option_price():
     Returns:
         JSON response with option prices, paths, and metadata
     """
+    print(f"🔍 Received request to /price_option from {request.origin}")
+    print(f"📝 Request headers: {dict(request.headers)}")
+    
     try:
         data = request.get_json()
+        print(f"📊 Request data: {data}")
         
         # Support both new and legacy field names
         call_or_put = data.get('option_type', data.get('callOrPut', '')).lower()
@@ -65,6 +83,8 @@ def calculate_option_price():
         strike_price = float(data.get('strike_price', data.get('K', 0)))
         time_to_expiry_days = float(data.get('time_to_expiry', data.get('T', 0)))
         num_simulations = int(data.get('num_simulations', data.get('numSims', 0)))
+        
+        print(f"🎯 Processing: {call_or_put} option for {ticker}, strike=${strike_price}, days={time_to_expiry_days}")
         
         # Convert days to years for the simulation (if needed)
         time_to_expiry_years = time_to_expiry_days / 365.0
