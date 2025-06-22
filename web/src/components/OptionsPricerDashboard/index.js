@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 import StockPriceChart from './Visualizations/StockPriceChart'
 import OptionPriceDistribution from './Visualizations/OptionPriceDistribution'
 import OptionsPricerForm from './OptionsPricerForm'
-import { Grid, Paper, Typography, createTheme, makeStyles } from '@material-ui/core'
+import { Grid, Paper, Typography, makeStyles, useTheme, useMediaQuery } from '@material-ui/core'
 import OptionsPriceDisplay from './OptionsPriceDisplay'
 import StockPriceDistribution from './Visualizations/StockReturnsHistogram'
-import { theme } from '../../theme'
+import { theme as customTheme } from '../../theme'
 import { Alert, CircularProgress } from '@mui/material'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   container: {
     width: '95%',
     borderRadius: '10px',
@@ -16,25 +16,30 @@ const useStyles = makeStyles({
     padding: '10px',
   },
   paper: {
+    backgroundColor: customTheme.palette.primary,
     borderRadius: '10px',
-    backgroundColor: theme.palette.primary,
     padding: '20px',
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
   },
   coloredPaper: {
+    backgroundColor: customTheme.palette.secondary,
     borderRadius: '10px',
-    backgroundColor: theme.palette.secondary,
     padding: '20px',
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
   },
+  flexContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+  },
   secondaryText: {
-    color: theme.palette.secondary,
-    fontFamily: theme.typography.fontFamily.secondary,
-    fontSize: theme.typography.fontSize.xs,
+    color: customTheme.palette.secondary,
+    fontFamily: customTheme.typography.fontFamily.secondary,
+    fontSize: customTheme.typography.fontSize.xs,
     marginTop: '10px',
   },
   alertContainer: {
@@ -51,7 +56,7 @@ const useStyles = makeStyles({
     alignItems: 'center',
     height: '100%',
   },
-})
+}))
 
 const OptionsPricerDashboard = () => {
   const [optionData, setOptionData] = useState({paths: [0]})
@@ -109,16 +114,13 @@ const OptionsPricerDashboard = () => {
         <Paper className={classes.paper} elevation={10}>
           {calculating ?
             <div className={classes.progressContainer}>
-              <CircularProgress sx={{color:theme.palette.secondary}} />
+              <CircularProgress style={{color: customTheme.palette.secondary}} />
             </div>
           :
-            <div>
+            <>
               <StockPriceChart paths={paths} strikePrice={strikePrice} />
-              <Typography className={classes.secondaryText}>{
-              '*While the model will simulate up to 100,000 paths, only up to 100 will be graphed'
-              }</Typography>
-            </div>
-            }
+            </>
+          }
         </Paper>
       </Grid>
     </Grid>

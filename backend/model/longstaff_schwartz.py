@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 # https://www.youtube.com/watch?v=--Il6rgtVjM
 # https://people.math.ethz.ch/~hjfurrer/teaching/LongstaffSchwartzAmericanOptionsLeastSquareMonteCarlo.pdf
-def longstaff_schwartz(S, K, r, T, option_type='call', dividend_present_val=[]):
+def longstaff_schwartz(S, K, r, T, option_type='call', dividend_present_val=None):
     """
     Longstaff-Schwartz American option pricing method for call or put options.
     
@@ -14,29 +14,32 @@ def longstaff_schwartz(S, K, r, T, option_type='call', dividend_present_val=[]):
     r (float): Risk-free interest rate.
     T (float): Time to maturity.
     option_type (str): 'call' for call option or 'put' for put option.
-    dividend_present_val (np.ndarray): discounted payoff of future dividends on each day.
+    dividend_present_val (np.ndarray): Discounted payoff of future dividends per path.
     
-    Returns: Option price and standard deviation
+    Returns:
+    tuple: Option price and standard error.
     """
 
     num_sims, num_steps = S.shape
-    dt = T / (num_steps) # Time interval (changed from T/(num_steps - 1))
+    dt = T / num_steps  # Time interval
     df = np.exp(-r * dt) # Discount factor per time interval
 
     if option_type == 'put':
         exercise_value = np.maximum(K - S, 0) # Intrinsic values for put option
     elif option_type == 'call':
         exercise_value = S - K # Intrinsic values for call option
-        exercise_value += [dividend_present_val] * len(S)
+        if dividend_present_val is not None and isinstance(dividend_present_val, np.ndarray):
+            if dividend_present_val.ndim == 1:
+                exercise_value = exercise_value + dividend_present_val[:, np.newaxis]
+            else:
+                exercise_value = exercise_value + dividend_present_val
         exercise_value = np.maximum(exercise_value, 0)
-        
     else:
         raise ValueError("Invalid option_type. Use 'put' or 'call'.")
 
     cashflow = np.zeros_like(exercise_value)
     cashflow[:, -1] = exercise_value[:, -1] # No continuation value on final day, it equals exercise value
 
-    print(f'Pricing American Option on {num_sims} paths')
     for t in tqdm.trange(num_steps - 2, -1, -1):
         itm = exercise_value[:, t] > 0 # Matrix set to true where price is in the money
         
@@ -44,7 +47,7 @@ def longstaff_schwartz(S, K, r, T, option_type='call', dividend_present_val=[]):
             regression = np.polyfit(S[itm, t], cashflow[itm, t + 1] * df, 2) # Fit a polynomial to the prices vs their cashflows using least squares method
             continuation_value = np.polyval(regression, S[itm, t]) # Use polynomial to estimate the continuation value
         else:
-            continuation_value = np.zeros(S[itm, t])
+            continuation_value = np.zeros(np.count_nonzero(itm))  # Fix: use correct shape for empty array
         
         # Exercise holds whether it is optimal exercise for each path on this timestep
         exercise = np.zeros(len(itm), dtype=bool) 

@@ -6,7 +6,6 @@ Chart.register(ChartAnnotationsPlugin)
 const numSamplePaths = 100
 
 const DemoVis = ({ paths, annotationX, annotationY }) => {
-  paths = paths.length > numSamplePaths ? paths.slice(0, numSamplePaths) : paths
   const chartRef = useRef(null)
   const chartInstance = useRef(null)
 
@@ -20,7 +19,24 @@ const DemoVis = ({ paths, annotationX, annotationY }) => {
   }, [])
 
   useEffect(() => {
-    if (chartRef.current && paths) {
+    // Validate and sanitize paths data
+    if (!paths || !Array.isArray(paths) || paths.length === 0) {
+      return
+    }
+    
+    // Ensure paths is a 2D array with valid data
+    const validPaths = paths.filter(path => 
+      Array.isArray(path) && path.length > 0 && 
+      path.every(price => typeof price === 'number' && !isNaN(price))
+    )
+    
+    if (validPaths.length === 0) {
+      return
+    }
+    
+    const chartPaths = validPaths.length > numSamplePaths ? validPaths.slice(0, numSamplePaths) : validPaths
+
+    if (chartRef.current && chartPaths) {
       const ctx = chartRef.current.getContext('2d')
 
       // Destroy the previous chart if it exists
@@ -31,8 +47,8 @@ const DemoVis = ({ paths, annotationX, annotationY }) => {
       chartInstance.current = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: [...Array(paths[0].length).keys()],
-          datasets: paths.map((path) => ({
+          labels: [...Array(chartPaths[0].length).keys()],
+          datasets: chartPaths.map((path) => ({
             data: path,
             borderWidth: 1,
             fill: false,
@@ -71,6 +87,21 @@ const DemoVis = ({ paths, annotationX, annotationY }) => {
       }
     }
   }, [paths, annotationX, annotationY])
+
+  // Validate and sanitize paths data for early return
+  if (!paths || !Array.isArray(paths) || paths.length === 0) {
+    return <div>No valid price paths available</div>
+  }
+  
+  // Ensure paths is a 2D array with valid data
+  const validPaths = paths.filter(path => 
+    Array.isArray(path) && path.length > 0 && 
+    path.every(price => typeof price === 'number' && !isNaN(price))
+  )
+  
+  if (validPaths.length === 0) {
+    return <div>No valid price paths available</div>
+  }
 
   return <canvas ref={chartRef} width={'100%'} />
 }

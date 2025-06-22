@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 import Chart from 'chart.js/auto'
 import ChartAnnotationsPlugin from 'chartjs-plugin-annotation'
-import { theme } from '../../../theme'
+import { theme as customTheme } from '../../../theme'
+import ChartContainer from './ChartContainer'
+
 Chart.register(ChartAnnotationsPlugin)
 
 const OptionPriceDistribution = ({ mean, stdDev }) => {
@@ -9,6 +11,11 @@ const OptionPriceDistribution = ({ mean, stdDev }) => {
   const chartInstance = useRef(null)
 
   useEffect(() => {
+    // Check if canvas element exists
+    if (!chartRef.current) {
+      return
+    }
+
     const ctx = chartRef.current.getContext('2d')
 
     // Destroy the previous chart if it exists
@@ -33,35 +40,55 @@ const OptionPriceDistribution = ({ mean, stdDev }) => {
         datasets: [
           {
             data: pdfValues,
-            backgroundColor: theme.palette.lighterSecondary,
+            backgroundColor: customTheme.charts.colors.secondary,
             fill: true,
-            borderColor: theme.palette.secondary,
-            borderWidth: 3,
+            borderColor: customTheme.charts.colors.primary,
+            borderWidth: 2,
             label: 'Probability Density',
             pointStyle: 'none',
-            pointRadius: 0
+            pointRadius: 0,
+            tension: 0.4,
           },
         ],
       },
       options: {
-        plugins: {
-          legend: {
-            display: false,
-          },
-        },
+        ...customTheme.charts.commonOptions,
         scales: {
+          ...customTheme.charts.commonOptions.scales,
           y: {
+            ...customTheme.charts.commonOptions.scales.y,
             beginAtZero: true,
             title: {
               display: true,
               text: 'Probability Density',
+              color: customTheme.charts.colors.text,
+              font: {
+                size: 13,
+                family: customTheme.charts.fontFamily,
+                weight: '500',
+              },
             },
           },
           x: {
+            ...customTheme.charts.commonOptions.scales.x,
             title: {
               display: true,
               text: 'Option Price',
+              color: customTheme.charts.colors.text,
+              font: {
+                size: 13,
+                family: customTheme.charts.fontFamily,
+                weight: '500',
+              },
             },
+          },
+        },
+        plugins: {
+          ...customTheme.charts.commonOptions.plugins,
+        },
+        elements: {
+          point: {
+            radius: 0,
           },
         },
       },
@@ -74,7 +101,20 @@ const OptionPriceDistribution = ({ mean, stdDev }) => {
     return a * b
   }
 
-  return <canvas ref={chartRef} />
+  // Check if we have valid data
+  const hasValidData = typeof mean === 'number' && typeof stdDev === 'number' && 
+    !isNaN(mean) && !isNaN(stdDev) && stdDev > 0
+
+  return (
+    <ChartContainer 
+      hasData={hasValidData}
+      title="Option Price Distribution"
+      subtitle="Run a calculation to see the probability distribution"
+      short={true}
+    >
+      <canvas ref={chartRef} />
+    </ChartContainer>
+  )
 }
 
 export default OptionPriceDistribution
