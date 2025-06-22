@@ -9,6 +9,14 @@ from data.cache import get_api_usage_stats
 from flask_cors import CORS
 import os
 
+# Try to load .env file for local development, but don't fail if it doesn't exist
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # python-dotenv not installed, that's fine for production
+    pass
+
 app = Flask(__name__)
 
 # CORS configuration

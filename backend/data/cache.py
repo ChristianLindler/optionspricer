@@ -1,5 +1,5 @@
 import os
-from supabase import create_client, Client
+from supabase.client import create_client, Client
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
 
@@ -9,21 +9,21 @@ from .providers.twelve_provider import TwelveProvider
 from .volatility_estimator import compute_std_of_log_returns
 from .dividend_forecaster import forecast_dividend_schedule
 
-# Import configuration
-try:
-    from config import ALPHAVANTAGE_API_KEY, TWELVE_API_KEY, SUPABASE_URL, SUPABASE_KEY
-except ImportError:
-    # Fallback to environment variables if config.py doesn't exist
-    ALPHAVANTAGE_API_KEY = os.getenv('ALPHAVANTAGE_API_KEY')
-    TWELVE_API_KEY = os.getenv('TWELVE_API_KEY')
-    SUPABASE_URL = os.getenv('SUPABASE_URL', "https://vpmwpfpbuvkbhzngmsfu.supabase.co")
-    SUPABASE_KEY = os.getenv('SUPABASE_KEY', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwbXdwZnBidXZrYmh6bmdtc2Z1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYzMzczNDgsImV4cCI6MjA2MTkxMzM0OH0.3iqzzgWrKB7a880eXQshpC-335ePhQCk05R82VgkWoQ")
+# Get configuration from environment variables
+ALPHAVANTAGE_API_KEY = os.getenv('ALPHAVANTAGE_API_KEY')
+TWELVE_API_KEY = os.getenv('TWELVE_API_KEY')
+SUPABASE_URL = os.getenv('SUPABASE_URL')
+SUPABASE_KEY = os.getenv('SUPABASE_KEY')
 
 # Validate required API keys
 if not ALPHAVANTAGE_API_KEY:
-    raise ValueError("ALPHAVANTAGE_API_KEY is required. Set it in config.py or as environment variable.")
+    raise ValueError("ALPHAVANTAGE_API_KEY is required. Set it as an environment variable.")
 if not TWELVE_API_KEY:
-    raise ValueError("TWELVE_API_KEY is required. Set it in config.py or as environment variable.")
+    raise ValueError("TWELVE_API_KEY is required. Set it as an environment variable.")
+if not SUPABASE_URL:
+    raise ValueError("SUPABASE_URL is required. Set it as an environment variable.")
+if not SUPABASE_KEY:
+    raise ValueError("SUPABASE_KEY is required. Set it as an environment variable.")
 
 # Initialize clients
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)

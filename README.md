@@ -77,7 +77,6 @@ python setup_env.py
 **Note**: The frontend will automatically connect to the backend API at http://localhost:5000
 
 ## Usage
-The user interface is very intuitive. By using YFinance to collect stock data, the application automatically collects information like current price, volatility, or dividend history, without requiring user input. Because of this, options can only be priced on stocks who's data is available through YFinance.
 In the top left of the application there is a form where users first enter a stock ticker they would like to price an option on. Other parameters (Strike price, time-to-expiry, number of simulations) are selected in the same form. When the parameters are selected, the "Calculate" button is used to begin calculating Options Price.
 Upon calculation, the application visualizes a sample of 100 of the user's simulated paths, the standard error for American Prices, and a distribution of the returns on the final day.
 
